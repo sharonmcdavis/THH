@@ -1,0 +1,7 @@
+status update:
+
+student name - d1
+month - current month - d4
+update column based on current day of month - starting with 1 = B
+
+incoming: name w, p, or d/(+ or -) or (S+ or S++ or S-) or (c+ or c-) or (ACC)
