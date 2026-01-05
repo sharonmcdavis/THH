@@ -1,0 +1,52 @@
+{
+    "students": [
+        "Silas",
+        "Journee",
+        "Nate",
+        "Zi",
+        "Arturo",
+        "Emmy",
+        "Rip",
+        "Roar",
+        "Cami",
+        "Braxton"
+    ],
+    "times": [
+        "7:30",
+        "7:45",
+        "8:30",
+        "9:00",
+        "9:30",
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "12:00",
+        "12:30",
+        "1:00",
+        "1:30",
+        "2:00",
+        "AC"
+    ],
+    "column1": {
+        "W": "W - wet",
+        "P": "P - dirty",
+        "D": "D - dry"
+    },
+    "column2": {
+        "+": "+ stood and peed",
+        "-": "- stood and did nothing",
+        "B": "Booyah Boo"
+    },
+    "column3": {
+        "S+": "S+ sat and peed",
+        "S++": "S++ sat and pooped",
+        "S-": "S- sat and did nothing",
+        "A": "Another"
+    },
+    "column4": {
+        "C+": "C+ peed in cup",
+        "C-": "C- stood but did not pee in cup",
+        "ACC": "ACC - had an accident in underwear"
+    }
+}
