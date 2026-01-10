@@ -4,7 +4,7 @@ from fpdf import FPDF
 import openpyxl
 from .data_storage import save_data, update_data, EXCEL_FILE, PDF_FILE
 from .data_loader import load_data_from_file
-from .utils import login_required, ADMIN_PASSWORD
+from .utils import login_required, ADMIN_PASSWORD, admin_login_required
 import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -16,6 +16,7 @@ data = load_data_from_file()
 
 @admin.route('/')
 @login_required
+@admin_login_required
 def admin_login():
     """Render the main page."""
     return render_template(
@@ -24,6 +25,7 @@ def admin_login():
 
 @admin.route('/verify_admin', methods=['POST'])
 @login_required
+@admin_login_required
 def verify_admin():
     # Get the password entered by the user
     entered_password = request.form.get('admin_password')
@@ -38,6 +40,7 @@ def verify_admin():
     
 @admin.route('/open')
 @login_required
+@admin_login_required
 def admin_window():
     """Render the main page."""
     return render_template(
@@ -47,6 +50,7 @@ def admin_window():
 
 @admin.route('/add_student', methods=['POST'])
 @login_required
+@admin_login_required
 def add_student():
     from .data_storage import students
     """Add a new student."""
@@ -67,6 +71,7 @@ def add_student():
 
 @admin.route('/remove_student', methods=['POST'])
 @login_required
+@admin_login_required
 def remove_student():
     from .data_storage import students
     """Remove a student."""
@@ -85,6 +90,7 @@ def remove_student():
 
 @admin.route('/add_time', methods=['POST'])
 @login_required
+@admin_login_required
 def add_time():
     from .data_storage import times
     """Add a new time."""
@@ -103,6 +109,7 @@ def add_time():
 
 @admin.route('/remove_time', methods=['POST'])
 @login_required
+@admin_login_required
 def remove_time():
     from .data_storage import times
     """Remove a time."""
@@ -121,6 +128,7 @@ def remove_time():
 
 @admin.route('/add_column', methods=['POST'])
 @login_required
+@admin_login_required
 def add_column():
     form_data = request.form.to_dict()
     print("form_data:", form_data)
@@ -154,6 +162,7 @@ def add_column():
 
 @admin.route('/remove_column', methods=['POST'])
 @login_required
+@admin_login_required
 def remove_column():
     form_data = request.form.to_dict()
 
@@ -187,6 +196,7 @@ def remove_column():
 
 @admin.route('/excel', methods=['POST'])
 @login_required
+@admin_login_required
 def excel():
     # Check if the file exists
     if os.path.exists(EXCEL_FILE):
@@ -228,6 +238,7 @@ class PDF(FPDF):
 
 @admin.route('/pdf', methods=['POST'])
 @login_required
+@admin_login_required
 def pdf():
     from .data_storage import EXCEL_FILE, PDF_FILE
     from openpyxl import load_workbook
