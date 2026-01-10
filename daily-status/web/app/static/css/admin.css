@@ -1,0 +1,186 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.window {
+    width: 1000px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    gap: 20px;
+}
+
+/* Flash Messages Container */
+.flash-messages {
+    grid-column: span 4; /* Span all 4 columns */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Add spacing above and below */
+    width: 100%; /* Ensure it spans the full width */
+}
+
+/* Default Flash Message Style */
+.alert {
+    display: inline-block; /* Center the message content */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+/* Error Message Style */
+.alert-error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Red border */
+}
+
+/* Success Message Style */
+.alert-success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Green border */
+}
+
+/* Ensure the form does not disrupt the grid layout */
+form {
+    display: contents; /* Allow children to participate in the grid layout */
+}
+
+.header {
+    display: flex; /* Use flexbox to align items */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    padding: 10px 20px; /* Add some padding around the header */
+}
+
+/* General Button Styling */
+.button {
+    width: 100%; /* Make the button take the full width of its container */
+    max-width: 150px; /* Set a maximum width to match the radio button labels */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Header Button Container */
+.header-buttons {
+    display: flex; /* Use flexbox to align buttons in a row */
+    gap: 10px; /* Add spacing between the buttons */
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Center the buttons vertically */
+    /* margin: 0 10px;  */
+    margin-bottom: 30px;
+}
+
+/* Add Button Styling */
+.add-button:hover {
+    background-color: #428C41; 
+    color: white;
+}
+
+.add-button {
+    background-color: #b9ebb9; 
+    color: #333;
+    border: 1px solid #428C41;
+    border-radius: 4px;
+}
+
+/* Remove Button Styling */
+.remove-button:hover {
+    background-color: #76408C; /* Red background */
+    color: white; /* White text */
+}
+
+.remove-button {
+    background-color: #dbb1e0; /* Darker red on hover */
+    color: #333;
+    border: 1px solid #76408C;
+    border-radius: 4px;
+}
+
+/* Submit Button Styling */
+.return-button {
+    background-color: #dbb1e0;
+    color: #333;
+    border: 1px solid #dbb1e0;
+    border-radius: 4px;}
+
+.return-button:hover {
+    background-color: #76408C; /* Darker purple on hover */
+    color: white; /* White text on hover */
+}
+
+/* Submit Button - Purple */
+.exit-button {
+    background-color: #f0f0f0; /* Purple */
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.exit-button:hover {
+    background-color: #888484; /* Amethyst */
+    color: white;
+}
+
+/* Submit Button - Purple */
+.report-button {
+    background-color: #b9ebb9; /* Purple */
+    color: #333;
+    border: 1px solid #428C41;
+    border-radius: 4px;
+}
+
+.report-button:hover {
+    background-color: #428C41; /* Amethyst */
+    color: white;
+}
+
+.form-row {
+    display: flex; /* Use flexbox to align items in a row */
+    align-items: center; /* Vertically center the input and button */
+    gap: 10px; /* Add spacing between the input and button */
+}
+
+.form-row input[type="text"],
+.form-row select {
+    flex: 1; /* Allow the input or select to take up available space */
+    padding: 10px; /* Add padding inside the input */
+    font-size: 16px; /* Make the text larger */
+    border: 1px solid #ccc; /* Add a light border */
+    border-radius: 5px; /* Round the corners */
+    outline: none; /* Remove the default outline */
+}
+
+input {
+    padding: 10px; /* Add padding inside the text box */
+    font-size: 12px; /* Make the text larger */
+    border: 1px solid #ccc; /* Add a light border */
+    border-radius: 5px; /* Round the corners */
+    outline: none; /* Remove the default outline */
+    width: 100px; /* Set a fixed width for the text box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.section {
+    gap: 10px;
+}
+
+.section form {
+    margin-bottom: 20px; /* Add spacing below each form */
+}

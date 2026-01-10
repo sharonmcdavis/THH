@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_login.css') }}">
+</head>
+<body>
+    <div class="window header">
+        <img src="../static/images/thh_logo.png" alt="Access Restricted">
+        <div class="title-container header-text">
+            <h1>Student Activity Tracker</h1><h1>Admin Functions</h1>
+            <p class="date"><h4>{{ date }}</h4></p>
+        </div>
+        <!-- Buttons Section -->
+        <div class="section" style="grid-column: 4;">
+            <div class="button-container" style="display: flex; flex-direction: column; padding-left: 50px;">
+                &nbsp;<br>&nbsp;
+                <!-- Admin Button -->
+                <form action="/admin/verify_admin" method="POST" style="margin: 0;">
+                    <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required>
+                    <button type="submit" class="button admin-button">Admin Functions</button>
+                </form>
+
+                <!-- Exit Button -->
+                <form action="/main" method="GET" style="margin: 0;text-align: right;">
+                    <button type="submit" class="button exit-button">Return</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" style="grid-column: span 4;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

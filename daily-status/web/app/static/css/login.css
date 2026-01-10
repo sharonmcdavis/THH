@@ -1,0 +1,35 @@
+.login-form {
+    display: flex; /* Use flexbox to align items in a row */
+    align-items: center; /* Vertically center the input and button */
+    gap: 10px; /* Add spacing between the input and button */
+}
+
+.password-input {
+    padding: 10px; /* Add padding inside the text box */
+    font-size: 16px; /* Make the text larger */
+    border: 1px solid #ccc; /* Add a light border */
+    border-radius: 5px; /* Round the corners */
+    outline: none; /* Remove the default outline */
+    width: 150px; /* Set a fixed width for the text box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.password-input:focus {
+    border-color: #4CAF50; /* Change border color on focus */
+    box-shadow: 0 4px 8px #4CAF50; /* Add a stronger shadow on focus */
+}
+
+.password-container {
+    display: flex;
+    flex-direction: column; /* Stack the title and date vertically */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+}
+
+.password-container h1 {
+    font-size: 2rem; /* Adjust the font size as needed */
+    margin: 0; /* Remove default margin */
+    text-align: left; /* Align the title to the left */
+    padding-bottom: 15px; 
+}

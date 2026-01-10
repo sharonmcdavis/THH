@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Functions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="window header">
+        <img src="../static/images/thh_logo.png" alt="The Helping House">
+        <div class="title-container">
+            <h1>Student Activity Tracker</h1><h1>Admin Functions</h1>
+            <p class="date"><h4>{{ date }}</h4></p>
+        </div>
+        <!-- Buttons Section -->
+        <div class="section" style="grid-column: 4;">
+            <div class="header-buttons" style="display: flex; flex-direction: column; padding-left: 200px;">
+                &nbsp;<br>&nbsp;
+                <form action="/main" method="GET" style="margin: 0;">
+                    <button type="submit" class="button return-button">Return</button>
+                </form>
+                <form action="/logout" method="GET">
+                    <button type="submit" class="button exit-button">Exit</button>
+                </form>
+                <form action="/admin/excel" method="POST">
+                    <button type="submit" class="button report-button">View Excel File</button>
+                </form>
+                <form action="/admin/pdf" method="POST" style="margin: 0;">
+                    <button type="submit" class="button report-button">View PDF File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" style="grid-column: span 4;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Admin Sections -->
+    <div class="window">
+        <!-- Students Section -->
+        <div class="section">
+            <h2>Students</h2>
+            <form action="/admin/add_student" method="POST" class="form-row">
+                <input type="text" name="student" placeholder="Enter student name" required>
+                <button type="submit" class="button add-button">Add</button>
+            </form>
+            <form action="/admin/remove_student" method="POST" class="form-row">
+                <select name="student" required>
+                    <option value="Select a Student...">Select a Student...</option>
+                    {% for student in data['students'] %}
+                        <option value="{{ student }}">{{ student }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button remove-button">Remove</button>
+            </form>
+        </div>
+
+        <!-- Times Section -->
+        <div class="section">
+            <h2>Times</h2>
+            <form action="/admin/add_time" method="POST" class="form-row">
+                <input type="text" name="time" placeholder="Enter time" required>
+                <button type="submit" class="button add-button">Add</button>
+            </form>
+            <form action="/admin/remove_time" method="POST" class="form-row">
+                <select name="time" required>
+                    <option value="Select a time...">Select a time...</option>
+                    {% for time in data['times'] %}
+                        <option value="{{ time }}">{{ time }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button remove-button">Remove</button>
+            </form>
+        </div>
+
+        <!-- Columns Section -->
+        {% for column in ['column1_options', 'column2_options', 'column3_options', 'column4_options'] %}
+        <div class="section">
+            <form action="/admin/add_column" method="POST" class="form-row">
+                <input type="hidden" name="column_name" value="{{ column }}"> 
+                <input type="text" name="key" placeholder="Enter key..." required>
+                <input type="text" name="value" placeholder="Enter value..." required>
+                <button type="submit" class="button add-button">Add</button>
+            </form>
+            <form action="/admin/remove_column" method="POST" class="form-row">
+                <select name="{{ column }}" required>
+                    <option value="Select an Option...">Select an Option...</option>
+                    {% for key, value in data[column].items() %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button remove-button">Remove</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

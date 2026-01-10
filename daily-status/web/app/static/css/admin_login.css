@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.window {
+    width: 1000px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
+    gap: 20px;
+}
+
+.header {
+    display: flex; /* Use flexbox to align items */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    gap: 20px; /* Add spacing between the image and the title container */
+    padding: 10px 20px; /* Add some padding around the header */
+}
+
+.header img {
+    max-width: 100px; /* Adjust the image size as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.password-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Two columns: 1 part for column 1, 2 parts for column 2 */
+    grid-template-rows: auto auto; /* Two rows: auto height for each row */
+    gap: 20px; /* Add spacing between grid items */
+    align-items: center; /* Vertically align items */
+}
+
+.header-text {
+    grid-column: 1; /* Place in column 1 */
+    grid-row: 1 / span 2; /* Span two rows */
+    text-align: center; /* Center-align the text */
+    font-size: 12px;
+}
+
+.login-form {
+    grid-column: 2; /* Place in column 2 */
+    grid-row: 1; /* Place in row 1 */
+    text-align: center; /* Center-align the form */
+}
+
+.return-form {
+    grid-column: 2; /* Place in column 2 */
+    grid-row: 2; /* Place in row 2 */
+    text-align: center; /* Center-align the button */
+}
+
+.input-button-row {
+    display: grid;               /* Use flexbox to align items in a row */
+    align-items: center;         /* Vertically align the input and button */
+    gap: 10px;                   /* Add spacing between the input and button */
+}
+
+.button {
+    padding: 8px 16px;           /* Add padding to the button */
+    font-size: 16px;             /* Match the font size of the input */
+    cursor: pointer;             /* Add a pointer cursor for better UX */
+}
+
+.password-input {
+    padding: 10px;               /* Add padding inside the text box */
+    font-size: 16px;             /* Make the text larger */
+    border: 1px solid #ccc;      /* Add a light border */
+    border-radius: 5px;          /* Round the corners */
+    outline: none;               /* Remove the default outline */
+    width: 150px;                /* Set the width to 100px */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.password-input:focus {
+    border-color: #4CAF50;       /* Change border color on focus */
+    box-shadow: 0 4px 8px #4CAF50; /* Add a stronger shadow on focus */
+}
+
+.button {
+    width: 150px;               /* Set the width of the buttons */
+    font-size: 14px;            /* Adjust font size */
+    border: 1px solid #ccc;     /* Add a light border */
+    border-radius: 4px;         /* Round the corners */
+    background-color: #428C41;  /* Add a background color */
+    color: white;               /* Set text color to white */
+    cursor: pointer;            /* Add a pointer cursor for better UX */
+    text-align: center;         /* Center-align the text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #45a049;  /* Darken the background color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a stronger shadow on hover */
+}
+
+.flash-messages {
+    grid-column: span 4; /* Span all 4 columns */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Add spacing above and below */
+    width: 100%; /* Ensure it spans the full width */
+}
+
+/* Default Flash Message Style */
+.alert {
+    display: inline-block; /* Center the message content */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+    text-align: center;   
+}
+
+/* Error Message Style */
+.alert-error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Red border */
+}
+
+/* Success Message Style */
+.alert-success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Green border */
+}
