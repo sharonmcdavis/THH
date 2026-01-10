@@ -18,14 +18,14 @@
             <div class="button-container" style="display: flex; flex-direction: column; padding-left: 50px;">
                 &nbsp;<br>&nbsp;
                 <!-- Admin Button -->
-                <form action="/admin/verify_admin" method="POST" style="margin: 0;">
+                <form action="{{ url_for('admin.verify_admin') }}" method="POST" style="margin: 0;">
                     <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required>
-                    <button type="submit" class="button admin-button">Admin Functions</button>
+                    <button type="submit" class="button login-button">Admin Functions</button>
                 </form>
 
                 <!-- Exit Button -->
                 <form action="/main" method="GET" style="margin: 0;text-align: right;">
-                    <button type="submit" class="button exit-button">Return</button>
+                    <button type="submit" class="button return-button">Return</button>
                 </form>
             </div>
         </div>

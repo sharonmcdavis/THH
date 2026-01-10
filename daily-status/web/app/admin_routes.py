@@ -16,7 +16,6 @@ data = load_data_from_file()
 
 @admin.route('/')
 @login_required
-@admin_login_required
 def admin_login():
     """Render the main page."""
     return render_template(
@@ -25,7 +24,6 @@ def admin_login():
 
 @admin.route('/verify_admin', methods=['POST'])
 @login_required
-@admin_login_required
 def verify_admin():
     # Get the password entered by the user
     entered_password = request.form.get('admin_password')

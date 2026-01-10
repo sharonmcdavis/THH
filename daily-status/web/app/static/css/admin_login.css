@@ -89,10 +89,9 @@ body {
 .button {
     width: 150px;               /* Set the width of the buttons */
     font-size: 14px;            /* Adjust font size */
-    border: 1px solid #ccc;     /* Add a light border */
+    border: 1px solid #333;     /* Add a light border */
     border-radius: 4px;         /* Round the corners */
-    background-color: #428C41;  /* Add a background color */
-    color: white;               /* Set text color to white */
+    color: #333;               /* Set text color to white */
     cursor: pointer;            /* Add a pointer cursor for better UX */
     text-align: center;         /* Center-align the text */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
@@ -100,9 +99,26 @@ body {
     font-weight: bold;
 }
 
-.button:hover {
-    background-color: #45a049;  /* Darken the background color on hover */
+.login-button {
+    background-color: #b9ebb9;  /* Add a background color */
+    color: #333;    
+}
+
+.login-button:hover {
+    background-color: #428C41;  /* Darken the background color on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a stronger shadow on hover */
+    color: white;    
+}
+
+.return-button {
+    background-color: #dbb1e0;  /* Add a background color */
+    color: #333;    
+}
+
+.return-button:hover {
+    background-color: #76408C;  /* Darken the background color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a stronger shadow on hover */
+    color: white;    
 }
 
 .flash-messages {
