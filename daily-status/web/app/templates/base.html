@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}THH App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_head %}{% endblock %}
+    <meta name="theme-color" content="#ffffff">
+    <style>
+      /* small inline helper for responsive images */
+      img.responsive { max-width:auto; height:auto; }
+    </style>
+</head>
+<body>
+  <header class="window header" role="banner">
+    <img src="{{ url_for('static', filename='images/thh_logo.jpg') }}" alt="THH logo" class="responsive" />
+    <div class="title-container" aria-hidden="false">
+      <h1>{% block header %}Student Activity Tracker{% endblock %}</h1>
+    </div>
+    <nav class="button-container" role="navigation" aria-label="Main actions">{% block nav %}{% endblock %}</nav>
+  </header>
+
+  <main role="main" aria-live="polite">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -6,8 +6,9 @@ body {
 }
 
 .window {
-    width: 1000px;
-    margin: 50px auto;
+    width: 90%;
+    max-width: 700px;
+    margin: 20px auto;
     background-color: #ffffff;
     border: 2px solid #ccc;
     border-radius: 8px;
@@ -39,10 +40,9 @@ body {
 }
 
 .title-container h1 {
-    font-size: 2rem; /* Adjust the font size as needed */
+    font-size: 1.4rem; /* Adjust the font size as needed */
     margin: 0; /* Remove default margin */
     text-align: left; /* Align the title to the left */
-    padding-top: 50px; 
 }
 
 .title-container .date {
@@ -70,7 +70,8 @@ h1 {
 }
 
 .section {
-    margin-bottom: 20px;
+    padding: 20px;
+    max-width: 400px;
 }
 
 .section h2 {
@@ -108,7 +109,7 @@ h1 {
 }
 
 textarea {
-    width: 100%;
+    width: 90%;
     height: 100px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -216,7 +217,7 @@ form {
     display: inline-block; /* Center the message content */
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     margin: 5px 0;
 }
@@ -233,4 +234,44 @@ form {
     background-color: #d4edda; /* Light green background */
     color: #428C41; /* Dark green text */
     border: 1px solid #c3e6cb; /* Green border */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .window { padding: 16px; gap: 12px; }
+    .title-container h1 { font-size: 1.6rem; }
+    .button { width: 100%; max-width: none; }
+}
+
+@media (max-width: 600px) {
+    .window { grid-template-columns: 1fr; padding: 12px; margin: 12px; }
+    .header { flex-direction: column; gap: 8px; align-items: center; }
+    .title-container { align-items: center; }
+    .title-container h1 { text-align: center; }
+    .button-container { padding-left: 0; display:flex; gap:8px; }
+    .button { width: 100%; max-width: none; }
+    .button-group { flex-direction: column; }
+    .students-group, .times-group { order: 0; }
+    textarea { height: 120px; }
+}
+
+/* Improve touch targets */
+
+/* Column options: make options in the 3rd column take about half width and wrap; allow shrink/grow */
+.options-column .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.options-column .button-group label {
+    box-sizing: border-box;
+    white-space: normal; /* allow wrapping */
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+.options-column .button-group input[type="radio"] + label {
+    display: inline-flex; /* make label shrink to content if text is small */
+    align-items: center;
+    justify-content: center;
 }

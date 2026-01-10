@@ -1,48 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Activity Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-</head>
-<body>
-    <div class="window header">
-        <img src="./static/images/thh_logo.png" alt="Access Restricted">
-        <div class="title-container">
-            <h1>Student Activity Tracker</h1>
-            <p class="date"><h4>{{ date }}</h4></p>
-        </div>
-        <!-- Buttons Section -->
-        <div class="section" style="grid-column: 4;">
-            <div class="button-container" style="display: flex; flex-direction: column; padding-left: 200px;">
-                &nbsp;<br>&nbsp;
-                <!-- Admin Button -->
-                <form action="/admin" method="GET" style="margin: 0;">
-                    <button type="submit" class="button admin-button">Admin Functions</button>
-                </form>
+{% extends 'base.html' %}
 
-                <!-- Exit Button -->
-                <form action="/logout" method="GET" style="margin: 0;">
-                    <button type="submit" class="button exit-button">Exit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages" style="grid-column: span 4;">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
-    <div class="window">
+{% block title %}Student Activity Tracker{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block nav %}
+  <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button admin-button">Admin</button></form>
+  <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button exit-button">Exit</button></form>
+{% endblock %}
+
+{% block content %}
+  <div class="window" role="region" aria-label="Main form">
         <!-- Data Form -->
         <form action="/submit" method="POST">
             <!-- Students Section -->
@@ -74,7 +44,7 @@
             </div>
 
             <!-- Column Options and Notes Section -->
-            <div class="section" style="grid-column: 3;">
+            <div class="section options-column" style="grid-column: 3;">
                 <div class="button-group">
                     <!-- Submit Button -->
                     <button type="submit" class="button submit-button ">Save</button>
@@ -125,5 +95,4 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

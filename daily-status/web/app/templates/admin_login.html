@@ -1,47 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_login.css') }}">
-</head>
-<body>
-    <div class="window header">
-        <img src="../static/images/thh_logo.png" alt="Access Restricted">
-        <div class="title-container header-text">
-            <h1>Student Activity Tracker</h1><h1>Admin Functions</h1>
-            <p class="date"><h4>{{ date }}</h4></p>
-        </div>
-        <!-- Buttons Section -->
-        <div class="section" style="grid-column: 4;">
-            <div class="button-container" style="display: flex; flex-direction: column; padding-left: 50px;">
-                &nbsp;<br>&nbsp;
-                <!-- Admin Button -->
-                <form action="{{ url_for('admin.verify_admin') }}" method="POST" style="margin: 0;">
-                    <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required>
-                    <button type="submit" class="button login-button">Admin Functions</button>
-                </form>
+{% extends 'base.html' %}
 
-                <!-- Exit Button -->
-                <form action="/main" method="GET" style="margin: 0;text-align: right;">
-                    <button type="submit" class="button return-button">Return</button>
-                </form>
-            </div>
-        </div>
-    </div>
+{% block title %}The Helping House - Admin Login{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_login.css') }}">
+{% endblock %}
+
+{% block header %}
+    Student Activity Tracker
+{% endblock %}
+
+{% block content %}
+  <div class="window header" role="region" aria-label="Main form">
+
+    <section class="password-container" role="region" aria-label="Admin login">
+        <h3>Admin Functions</h3>
+        <form action="{{ url_for('admin.verify_admin') }}" method="POST" class="login-form" aria-label="Admin password form">
+            <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required aria-required="true">
+            <button type="submit" class="button login-button">Admin Login</button>
+        </form>
+
+        <form action="/main" method="GET" class="return-form">
+            <button type="submit" class="button return-button">Return</button>
+        </form>
+    </section>
+
     <div>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flash-messages" style="grid-column: span 4;">
+                <div class="flash-messages">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
                     {% endfor %}
                 </div>
             {% endif %}
         {% endwith %}
     </div>
-</body>
-</html>
+{% endblock %}
+</div>

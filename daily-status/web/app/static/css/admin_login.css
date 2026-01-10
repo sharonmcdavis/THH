@@ -6,8 +6,9 @@ body {
 }
 
 .window {
-    width: 1000px;
-    margin: 50px auto;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
     background-color: #ffffff;
     border: 2px solid #ccc;
     border-radius: 8px;
@@ -17,7 +18,6 @@ body {
     grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
     gap: 20px;
 }
-
 .header {
     display: flex; /* Use flexbox to align items */
     align-items: center; /* Center items vertically */
@@ -32,11 +32,10 @@ body {
 }
 
 .password-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr; /* Two columns: 1 part for column 1, 2 parts for column 2 */
-    grid-template-rows: auto auto; /* Two rows: auto height for each row */
-    gap: 20px; /* Add spacing between grid items */
-    align-items: center; /* Vertically align items */
+    display: flex;
+    flex-direction: column; /* Stack the title and date vertically */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
 }
 
 .header-text {
@@ -47,27 +46,25 @@ body {
 }
 
 .login-form {
-    grid-column: 2; /* Place in column 2 */
-    grid-row: 1; /* Place in row 1 */
-    text-align: center; /* Center-align the form */
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end; /* align buttons to the right */
+    align-items: center;
+    padding-right: 8px;
 }
 
 .return-form {
-    grid-column: 2; /* Place in column 2 */
-    grid-row: 2; /* Place in row 2 */
-    text-align: center; /* Center-align the button */
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* align return button to the right */
+    padding-right: 8px;
 }
 
 .input-button-row {
     display: grid;               /* Use flexbox to align items in a row */
     align-items: center;         /* Vertically align the input and button */
     gap: 10px;                   /* Add spacing between the input and button */
-}
-
-.button {
-    padding: 8px 16px;           /* Add padding to the button */
-    font-size: 16px;             /* Match the font size of the input */
-    cursor: pointer;             /* Add a pointer cursor for better UX */
 }
 
 .password-input {
@@ -87,7 +84,7 @@ body {
 }
 
 .button {
-    width: 150px;               /* Set the width of the buttons */
+    width: 100%; /* Make the button take the full width of its container */
     font-size: 14px;            /* Adjust font size */
     border: 1px solid #333;     /* Add a light border */
     border-radius: 4px;         /* Round the corners */
@@ -112,7 +109,8 @@ body {
 
 .return-button {
     background-color: #dbb1e0;  /* Add a background color */
-    color: #333;    
+    color: #333;  
+    width: 100%;  
 }
 
 .return-button:hover {
@@ -151,4 +149,12 @@ body {
     background-color: #d4edda; /* Light green background */
     color: #155724; /* Dark green text */
     border: 1px solid #c3e6cb; /* Green border */
+}
+
+@media (max-width: 700px) {
+    .window { grid-template-columns: 1fr; padding: 12px; margin: 12px; }
+    .password-container { grid-template-columns: 1fr; gap: 12px; }
+    .login-form, .return-form { grid-column: 1; text-align: center; }
+    .password-input { width: 100%; max-width: 360px; }
+    .button { width: 100%; max-width: none; }
 }

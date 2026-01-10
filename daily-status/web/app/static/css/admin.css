@@ -6,8 +6,9 @@ body {
 }
 
 .window {
-    width: 1000px;
-    margin: 50px auto;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
     background-color: #ffffff;
     border: 2px solid #ccc;
     border-radius: 8px;
@@ -65,7 +66,7 @@ form {
 /* General Button Styling */
 .button {
     width: 100%; /* Make the button take the full width of its container */
-    max-width: 150px; /* Set a maximum width to match the radio button labels */
+    max-width: 200px; /* Set a maximum width to match the radio button labels */
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -85,6 +86,15 @@ form {
     /* margin: 0 10px;  */
     margin-bottom: 30px;
 }
+    .header-buttons {
+        display: grid; /* 2x2 grid for the 4 header buttons */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px; /* spacing between buttons */
+        justify-items: stretch;
+        align-items: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
 
 /* Add Button Styling */
 .add-button:hover {
@@ -117,7 +127,9 @@ form {
     background-color: #dbb1e0;
     color: #333;
     border: 1px solid #dbb1e0;
-    border-radius: 4px;}
+    border-radius: 4px;
+    width: 200px;
+}
 
 .return-button:hover {
     background-color: #76408C; /* Darker purple on hover */
@@ -130,6 +142,7 @@ form {
     color: #333;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 200px;
 }
 
 .exit-button:hover {
@@ -143,6 +156,7 @@ form {
     color: #333;
     border: 1px solid #428C41;
     border-radius: 4px;
+    width: 200px;
 }
 
 .report-button:hover {
@@ -160,7 +174,7 @@ form {
 .form-row select {
     flex: 1; /* Allow the input or select to take up available space */
     padding: 10px; /* Add padding inside the input */
-    font-size: 16px; /* Make the text larger */
+    font-size: 14px; /* Make the text larger */
     border: 1px solid #ccc; /* Add a light border */
     border-radius: 5px; /* Round the corners */
     outline: none; /* Remove the default outline */
@@ -179,6 +193,13 @@ input {
 
 .section {
     gap: 10px;
+}
+
+@media (max-width: 700px) {
+    .window { grid-template-columns: 1fr; padding: 12px; margin: 12px; }
+    .header { flex-direction: column; gap: 8px; align-items: center; }
+    .header-buttons { flex-direction: column; gap: 8px; }
+    .button { max-width: none; width: 100%; }
 }
 
 .section form {
