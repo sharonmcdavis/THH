@@ -21,6 +21,20 @@
     <nav class="button-container" role="navigation" aria-label="Main actions">{% block nav %}{% endblock %}</nav>
   </header>
 
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" style="grid-column: span 4;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
   <main role="main" aria-live="polite">
     {% block content %}{% endblock %}
   </main>
