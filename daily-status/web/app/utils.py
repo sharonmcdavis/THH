@@ -1,5 +1,14 @@
+import os
 from flask import session, redirect, url_for, flash
 from datetime import datetime, timedelta
+
+# Define the base directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Define file paths
+DATA_FILE = os.path.join(BASE_DIR, "app_data.json")
+EXCEL_FILE = os.path.join(BASE_DIR, "student_activity.xlsx")
+PDF_FILE = os.path.join(BASE_DIR, "student_activity.pdf")
 
 WEB_PASSWORD = "401"
 ADMIN_PASSWORD = "1102"

@@ -1,18 +1,10 @@
 # data_storage.py
 import json
 from tkinter import messagebox
-import os
 import openpyxl
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
-# Define the base directory
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Define file paths
-DATA_FILE = os.path.join(BASE_DIR, "app_data.json")
-EXCEL_FILE = os.path.join(BASE_DIR, "student_activity.xlsx")
-PDF_FILE = os.path.join(BASE_DIR, "student_activity.pdf")
+from .utils import DATA_FILE, EXCEL_FILE, PDF_FILE
 
 # Global variables
 students = []
@@ -27,7 +19,7 @@ def initialize_data():
     """Load data from the JSON file into global variables."""
     global students, times, column1_options, column2_options, column3_options, column4_options
     try:
-        with open("app_data.json", "r") as file:
+        with open(DATA_FILE, "r") as file:
             data = json.load(file)
             students = data.get("students", [])
             times = data.get("times", [])
@@ -38,7 +30,7 @@ def initialize_data():
         students = sorted(students)
 
     except FileNotFoundError:
-        print("app_data.json not found. Using default values.")
+        print(f"{DATA_FILE} not found. Using default values.")
         students = []
         times = []
         column1_options = {}
