@@ -25,7 +25,7 @@ def login_required(f):
         login_time = session.get('login_time')
         if login_time:
             login_time = datetime.strptime(login_time, '%Y-%m-%d %H:%M:%S')
-            if datetime.now() - login_time > timedelta(minutes=5):
+            if datetime.now() - login_time > timedelta(minutes=600):
                 session.clear()  # Clear the session
                 flash("Your session has expired. Please log in again.", "error")
                 return redirect(url_for('main.index'))
