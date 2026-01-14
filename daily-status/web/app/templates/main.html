@@ -3,96 +3,96 @@
 {% block title %}Student Activity Tracker{% endblock %}
 
 {% block extra_head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 {% endblock %}
 
 {% block nav %}
-  <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button admin-button">Admin</button></form>
-  <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button exit-button">Exit</button></form>
+  <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button green-button">Admin</button></form>
+  <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button gray-button">Exit</button></form>
 {% endblock %}
 
 {% block content %}
-  <div class="window" role="region" aria-label="Main form">
-        <!-- Data Form -->
-        <form action="/submit" method="POST">
-            <!-- Students Section -->
-            <div class="section students-group" style="grid-column: 1;">
-                <h2>Students</h2>
-                <div class="button-group">
-                    {% if students %}
-                            {% for s in students %}
-                        <input type="radio" id="student{{ loop.index }}" name="student" value="{{ s }}" 
-                            {% if s == student %}checked{% endif %}>
-                        <label for="student{{ loop.index }}">{{ s }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
+<form action="/submit" method="POST">
+<div class="window">
+  <div class="main-window" role="region" aria-label="Main form">
+        <!-- Students Section -->
+        <div class="section">
+            <h2>Students</h2>
+            <div class="button-group">
+                {% if students %}
+                    {% for s in students %}
+                    <input type="radio" id="student{{ loop.index }}" name="student" value="{{ s }}" 
+                        {% if s == student %}checked{% endif %}>
+                    <label for="student{{ loop.index }}">{{ s }}</label>
+                    {% endfor %}
+                {% endif %}                    
+            </div>
+        </div>
+
+        <!-- Times Section -->
+        <div class="section">
+            <h2>Times</h2>
+            <div class="button-group">
+                {% if times %}
+                    {% for t in times %}
+                    <input type="radio" id="time{{ loop.index }}" name="time" value="{{ t }}"
+                        {% if t == time %}checked{% endif %}>
+                    <label for="time{{ loop.index }}">{{ t }}</label>
+                    {% endfor %}
+                {% endif %}                    
+            </div>
+        </div>
+
+        <!-- Column Options and Notes Section -->
+        <div class="section">
+            <div class="button-group">
+                <button type="submit" class="button purple-button ">Save</button>
+                {% if column1_options %}
+                    {% for key, value in column1_options.items() %}
+                    <input type="radio" id="column1{{ loop.index }}" name="column1" value="{{ key }}"
+                        {% if key == column1 %}checked{% endif %}>
+                    <label for="column1{{ loop.index }}">{{ value }}</label>
+                    {% endfor %}
+                {% endif %}                    
             </div>
 
-            <!-- Times Section -->
-            <div class="section times-group" style="grid-column: 2;">
-                <h2>Times</h2>
-                <div class="button-group">
-                    {% if times %}
-                        {% for t in times %}
-                        <input type="radio" id="time{{ loop.index }}" name="time" value="{{ t }}"
-                            {% if t == time %}checked{% endif %}>
-                        <label for="time{{ loop.index }}">{{ t }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
+            <h2>&nbsp;</h2>
+            <div class="button-group">
+                {% if column1_options %}
+                    {% for key, value in column2_options.items() %}
+                    <input type="radio" id="column2{{ loop.index }}" name="column2" value="{{ key }}"
+                        {% if key == column2 %}checked{% endif %}>
+                    <label for="column2{{ loop.index }}">{{ value }}</label>
+                    {% endfor %}
+                {% endif %}                    
             </div>
 
-            <!-- Column Options and Notes Section -->
-            <div class="section options-column" style="grid-column: 3;">
-                <div class="button-group">
-                    <!-- Submit Button -->
-                    <button type="submit" class="button submit-button ">Save</button>
-                    {% if column1_options %}
-                        {% for key, value in column1_options.items() %}
-                        <input type="radio" id="column1{{ loop.index }}" name="column1" value="{{ key }}"
-                            {% if key == column1 %}checked{% endif %}>
-                        <label for="column1{{ loop.index }}">{{ value }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
-
-                <h2>&nbsp;</h2>
-                <div class="button-group">
-                    {% if column2_options %}
-                        {% for key, value in column2_options.items() %}
-                        <input type="radio" id="column2{{ loop.index }}" name="column2" value="{{ key }}"
-                            {% if key == column2 %}checked{% endif %}>
-                        <label for="column2{{ loop.index }}">{{ value }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
-
-                <h2>&nbsp;</h2>
-                <div class="button-group">
-                    {% if column3_options %}
-                        {% for key, value in column3_options.items() %}
-                        <input type="radio" id="column3{{ loop.index }}" name="column3" value="{{ key }}"
-                            {% if key == column3 %}checked{% endif %}>
-                        <label for="column3{{ loop.index }}">{{ value }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
-
-                <h2>&nbsp;</h2>
-                <div class="button-group">
-                    {% if column4_options %}
-                        {% for key, value in column4_options.items() %}
-                        <input type="radio" id="column4{{ loop.index }}" name="column4" value="{{ key }}"
-                            {% if key == column4 %}checked{% endif %}>
-                        <label for="column4{{ loop.index }}">{{ value }}</label>
-                        {% endfor %}
-                    {% endif %}                    
-                </div>
-
-                <h2>Notes</h2>
-                <textarea name="notes" placeholder="Enter any additional notes here...">{{ notes }}</textarea>
+            <h2>&nbsp;</h2>
+            <div class="button-group">
+                {% if column1_options %}
+                    {% for key, value in column3_options.items() %}
+                    <input type="radio" id="column3{{ loop.index }}" name="column3" value="{{ key }}"
+                        {% if key == column3 %}checked{% endif %}>
+                    <label for="column3{{ loop.index }}">{{ value }}</label>
+                    {% endfor %}
+                {% endif %}                    
             </div>
-        </form>
+
+            <h2>&nbsp;</h2>
+            <div class="button-group">
+                {% if column4_options %}
+                    {% for key, value in column4_options.items() %}
+                    <input type="radio" id="column4{{ loop.index }}" name="column4" value="{{ key }}"
+                        {% if key == column4 %}checked{% endif %}>
+                    <label for="column4{{ loop.index }}">{{ value }}</label>
+                    {% endfor %}
+                {% endif %}                    
+            </div>
+
+            <h2>Notes</h2>
+            <textarea name="notes" placeholder="Enter any additional notes here...">{{ notes }}</textarea>
+        </div>
     </div>
+</div>
+</form>
 {% endblock %}

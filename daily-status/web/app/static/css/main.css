@@ -1,277 +1,97 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+/* Main-Specific Styles */
+/* Main-Specific Styles */
+.main-window {
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: 1fr 1fr 1fr; /* Define three equal columns */
+    gap: 10px; /* Add spacing between columns */
+    max-width: 100%; /* Ensure it does not exceed the parent container's width */
+    width: 100%; /* Make it take up the full width of the parent */
+    padding: 5px; /* Add padding inside the container */
+    box-sizing: border-box; /* Include padding and border in the element's width */
+    overflow: hidden; /* Prevent content from overflowing */
 }
 
-.window {
-    width: 90%;
-    max-width: 700px;
-    margin: 20px auto;
-    background-color: #ffffff;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
-    gap: 20px;
-}
-
-.header {
-    display: flex; /* Use flexbox to align items */
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-    gap: 20px; /* Add spacing between the image and the title container */
-    padding: 10px 20px; /* Add some padding around the header */
-}
-
-.header img {
-    max-width: 100px; /* Adjust the image size as needed */
-    height: auto; /* Maintain aspect ratio */
-}
-
-.title-container {
-    display: flex;
-    flex-direction: column; /* Stack the title and date vertically */
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-}
-
-.title-container h1 {
-    font-size: 1.4rem; /* Adjust the font size as needed */
-    margin: 0; /* Remove default margin */
-    text-align: left; /* Align the title to the left */
-}
-
-.title-container .date {
-    font-size: 1rem; /* Adjust the font size for the date */
-    color: #555; /* Set a lighter color for the date */
-    margin: 0; /* Remove default margin */
-    text-align: left; /* Align the date to the left */
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    grid-column: span 4; /* Title spans all 4 columns */
-    margin: 0;
-    padding: 0;
-}
-
-.date {
-    text-align: center;
-    font-size: 16px;
-    color: #555;
-    margin: 0;
-    padding: 0;
-    grid-column: span 4; /* Date spans all 4 columns */
-}
-
+/* Ensure each section fits within its column */
 .section {
-    padding: 20px;
-    max-width: 400px;
+    padding: 5px;
+    background-color: #ffffff; /* Optional: Add a background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    overflow: auto; /* Add scrollbars if content overflows */
 }
 
 .section h2 {
     font-size: 16px;
     color: #555;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .button-group {
     display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 10px;
+    flex-direction: column;
+    gap: 5px;
 }
 
+/* Hide the actual radio buttons */
 .button-group input[type="radio"] {
     display: none;
 }
 
+/* Style the labels to look like buttons */
 .button-group label {
     display: inline-block;
-    padding: 10px 10px;
+    padding: 10px 20px;
+    margin: 5px;
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border-color: #888484;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 16px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    font-size: 14px;
 }
 
+/* Change the appearance of the selected button */
 .button-group input[type="radio"]:checked + label {
-    background-color: #888484;
-    color: white;
+    background-color: #888484; /* Green background for selected button */
+    color: white; /* White text for selected button */
     border-color: #888484;
 }
 
+/* Add hover effect for the labels */
+.button-group label:hover {
+    background-color: #888484;
+    color: white;
+}
+
+/* Make all Times buttons green by default */
+.button-group input[name="time"] + label {
+    background-color: #b9ebb9; /* Green background */
+    color: #333;
+    border-color: #4CAF50; /* Green border */
+}
+
+/* Change the appearance of the selected Times button */
+.button-group input[name="time"]:checked + label {
+    background-color: #4CAF50; /* Keep the green background for selected button */
+    color: white; /* White text for selected button */
+    border-color: #4CAF50;
+}
+
+/* Add hover effect for the Times buttons */
+.button-group input[name="time"] + label:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    color: white;
+}
+
 textarea {
-    width: 90%;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 95%; /* Ensure the textarea spans the full width of its column */
+    height: 120px;
     padding: 10px;
-    font-size: 12px;
-}
-
-.button {
-    display: block;
-    width: 200px; /* Set a consistent width for all buttons */
-    height: 40px; /* Reduce the height of the buttons */
-    margin: 3px auto; /* Add spacing between buttons and center them */
-    background-color: #428C41;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    font-weight: bold;
-}
-
-.submit-button {
-    width: 100%; /* Make the button take the full width of its container */
-    max-width: 400px; /* Set a maximum width to match the radio button labels */
-    padding: 10px; /* Add padding for better appearance */
-    background-color: #dbb1e0; /* Purple background */
-    color: #333; /* Text color */
-    border: 1px solid #76408C; /* Border color */
-    border-radius: 4px; /* Rounded corners */
-    font-size: 14px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    text-align: center; /* Center the text */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
-}
-
-.submit-button:hover {
-    background-color: #76408C; /* Darker purple on hover */
-    color: white; /* White text on hover */
-}
-
-.exit-button:hover {
-    background-color: #888484; /* Amethyst */
-    color: white;
-}
-
-/* Submit Button - Purple */
-.exit-button {
-    background-color: #f0f0f0; /* Purple */
-    color: #333;
     border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.admin-button:hover {
-    background-color: #428C41; /* Amethyst */
-    color: white;
-}
-
-/* Submit Button - Purple */
-.admin-button {
-    background-color: #b9ebb9; /* Purple */
-    color: #333;
-    border: 1px solid #428C41;
-    border-radius: 4px;
-}
-
-/* Ensure the form does not disrupt the grid layout */
-form {
-    display: contents; /* Allow children to participate in the grid layout */
-}
-
-/* Students Section - Light Purple/Lavender */
-.students-group label {
-    background-color: #dbb1e0; /* Lavender */
-    color: #333;
-}
-
-.students-group input[type="radio"]:checked + label {
-    background-color: #76408C; /* Thistle (darker lavender) */
-    color: white;
-}
-
-/* Times Section - Light Green */
-.times-group label {
-    background-color: #b9ebb9; /* Light Green */
-    color: #333;
-}
-
-.times-group input[type="radio"]:checked + label {
-    background-color: #428C41; /* Lime Green */
-    color: white;
-}
-
-/* Flash Messages Container */
-.flash-messages {
-    grid-column: span 4; /* Span all 4 columns */
-    text-align: center; /* Center the text */
-    margin: 20px 0; /* Add spacing above and below */
-    width: 100%; /* Ensure it spans the full width */
-}
-
-/* Default Flash Message Style */
-.alert {
-    display: inline-block; /* Center the message content */
-    padding: 10px 20px;
     border-radius: 5px;
     font-size: 14px;
-    font-weight: bold;
-    margin: 5px 0;
+    resize: vertical; /* Allow vertical resizing */
 }
 
-/* Error Message Style */
-.alert-error {
-    background-color: #f8d7da; /* Light red background */
-    color: #721c24; /* Dark red text */
-    border: 1px solid #f5c6cb; /* Red border */
-}
-
-/* Success Message Style */
-.alert-success {
-    background-color: #d4edda; /* Light green background */
-    color: #428C41; /* Dark green text */
-    border: 1px solid #c3e6cb; /* Green border */
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .window { padding: 16px; gap: 12px; }
-    .title-container h1 { font-size: 1.6rem; }
-    .button { width: 100%; max-width: none; }
-}
-
-@media (max-width: 600px) {
-    .window { grid-template-columns: 1fr; padding: 12px; margin: 12px; }
-    .header { flex-direction: column; gap: 8px; align-items: center; }
-    .title-container { align-items: center; }
-    .title-container h1 { text-align: center; }
-    .button-container { padding-left: 0; display:flex; gap:8px; }
-    .button { width: 100%; max-width: none; }
-    .button-group { flex-direction: column; }
-    .students-group, .times-group { order: 0; }
-    textarea { height: 120px; }
-}
-
-/* Improve touch targets */
-
-/* Column options: make options in the 3rd column take about half width and wrap; allow shrink/grow */
-.options-column .button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.options-column .button-group label {
-    box-sizing: border-box;
-    white-space: normal; /* allow wrapping */
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    text-align: center;
-}
-.options-column .button-group input[type="radio"] + label {
-    display: inline-flex; /* make label shrink to content if text is small */
-    align-items: center;
-    justify-content: center;
-}

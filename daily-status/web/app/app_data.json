@@ -1,17 +1,17 @@
 {
-    "students": [
-        "Arturo",
-        "Braxton",
-        "Cami",
-        "Emmy",
-        "Joshua",
-        "Journee",
-        "Nate",
-        "Rip",
-        "Roar",
-        "Silas",
-        "Zi"
-    ],
+    "students": {
+        "Arturo": "red",
+        "Braxton": "orange",
+        "Cami": "yellow",
+        "Emmy": "green",
+        "Joshua": "blue",
+        "Journee": "purple",
+        "Nate": "pink",
+        "Rip": "brown",
+        "Roar": "gray",
+        "Silas": "black",
+        "Zi": "teal"
+    },
     "times": [
         "7:30",
         "7:45",
@@ -46,6 +46,7 @@
     "column4_options": {
         "C+": "C+ peed in cup",
         "C-": "C- stood but did not pee in cup",
-        "ACC": "ACC - had an accident in underwear"
+        "ACC-W": "ACC - had a wet accident in underwear",
+        "ACC-BM": "ACC - had a BM accident in underwear"
     }
 }

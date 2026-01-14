@@ -1,0 +1,168 @@
+/* Base Styles for All Pages */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.window {
+    max-width: 95%; /* Set a maximum width for the window */
+    width: 100%; /* Make the window responsive */
+    margin: 0 auto; /* Center the window on the page */
+    padding: 20px; /* Add padding inside the window */
+    border: 1px solid #ccc; /* Optional: Add a border */
+    border-radius: 8px; /* Optional: Add rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
+    background-color: #f9f9f9; /* Optional: Add a background color */
+    box-sizing: border-box; /* Include padding and border in the element's width */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 20px;
+}
+
+.header img {
+    max-width: 100px;
+    height: auto;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-container h1 {
+    font-size: 1.4rem;
+    margin: 0;
+    text-align: center;
+}
+
+.flash-messages {
+    grid-column: span 4;
+    text-align: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.alert {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.button {
+    display: block;
+    width: 200px;
+    height: 40px;
+    margin: 3px auto;
+    background-color: #428C41;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2e6b2f;
+}
+
+.gray-button {
+    background-color: #f0f0f0; 
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.gray-button:hover {
+    background-color: #888484; 
+    color: white;
+}
+
+.green-button {
+    background-color: #b9ebb9; 
+    color: #333;
+    border: 1px solid #428C41;
+    border-radius: 4px;
+}
+
+.green-button:hover {
+    background-color: #428C41; 
+    color: white;
+}
+
+.purple-button {
+    background-color: #dbb1e0; 
+    color: #333;
+    border: 1px solid #76408C;
+    border-radius: 4px;
+}
+
+.purple-button:hover {
+    background-color: #76408C; 
+    color: white;
+}
+
+textarea {
+    width:80%;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 12px;
+}
+
+input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 700px) {
+    .window {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        margin: 12px;
+    }
+
+    .button {
+        width: 100%;
+        max-width: none;
+    }
+}

@@ -1,160 +1,32 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-}
-
-.window {
-    width: 90%;
-    max-width: 1000px;
-    margin: 20px auto;
-    background-color: #ffffff;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
-    gap: 20px;
-}
-.header {
-    display: flex; /* Use flexbox to align items */
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-    gap: 20px; /* Add spacing between the image and the title container */
-    padding: 10px 20px; /* Add some padding around the header */
-}
-
-.header img {
-    max-width: 100px; /* Adjust the image size as needed */
-    height: auto; /* Maintain aspect ratio */
-}
-
+/* Admin Login-Specific Styles */
 .password-container {
     display: flex;
-    flex-direction: column; /* Stack the title and date vertically */
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-}
-
-.header-text {
-    grid-column: 1; /* Place in column 1 */
-    grid-row: 1 / span 2; /* Span two rows */
-    text-align: center; /* Center-align the text */
-    font-size: 12px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-form {
-    width: 100%;
     display: flex;
     gap: 8px;
-    justify-content: flex-end; /* align buttons to the right */
+    justify-content: flex-end;
     align-items: center;
     padding-right: 8px;
 }
 
 .return-form {
-    width: 100%;
     display: flex;
-    justify-content: flex-end; /* align return button to the right */
+    justify-content: flex-end;
     padding-right: 8px;
 }
 
-.input-button-row {
-    display: grid;               /* Use flexbox to align items in a row */
-    align-items: center;         /* Vertically align the input and button */
-    gap: 10px;                   /* Add spacing between the input and button */
-}
-
-.password-input {
-    padding: 10px;               /* Add padding inside the text box */
-    font-size: 16px;             /* Make the text larger */
-    border: 1px solid #ccc;      /* Add a light border */
-    border-radius: 5px;          /* Round the corners */
-    outline: none;               /* Remove the default outline */
-    width: 150px;                /* Set the width to 100px */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
-}
-
-.password-input:focus {
-    border-color: #4CAF50;       /* Change border color on focus */
-    box-shadow: 0 4px 8px #4CAF50; /* Add a stronger shadow on focus */
-}
-
-.button {
-    width: 100%; /* Make the button take the full width of its container */
-    font-size: 14px;            /* Adjust font size */
-    border: 1px solid #333;     /* Add a light border */
-    border-radius: 4px;         /* Round the corners */
-    color: #333;               /* Set text color to white */
-    cursor: pointer;            /* Add a pointer cursor for better UX */
-    text-align: center;         /* Center-align the text */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
-    font-weight: bold;
-}
-
-.login-button {
-    background-color: #b9ebb9;  /* Add a background color */
-    color: #333;    
-}
-
-.login-button:hover {
-    background-color: #428C41;  /* Darken the background color on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a stronger shadow on hover */
-    color: white;    
-}
-
 .return-button {
-    background-color: #dbb1e0;  /* Add a background color */
-    color: #333;  
-    width: 100%;  
+    background-color: #dbb1e0;
+    color: #333;
+    width: 100%;
 }
 
 .return-button:hover {
-    background-color: #76408C;  /* Darken the background color on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a stronger shadow on hover */
-    color: white;    
-}
-
-.flash-messages {
-    grid-column: span 4; /* Span all 4 columns */
-    text-align: center; /* Center the text */
-    margin: 20px 0; /* Add spacing above and below */
-    width: 100%; /* Ensure it spans the full width */
-}
-
-/* Default Flash Message Style */
-.alert {
-    display: inline-block; /* Center the message content */
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 5px 0;
-    text-align: center;   
-}
-
-/* Error Message Style */
-.alert-error {
-    background-color: #f8d7da; /* Light red background */
-    color: #721c24; /* Dark red text */
-    border: 1px solid #f5c6cb; /* Red border */
-}
-
-/* Success Message Style */
-.alert-success {
-    background-color: #d4edda; /* Light green background */
-    color: #155724; /* Dark green text */
-    border: 1px solid #c3e6cb; /* Green border */
-}
-
-@media (max-width: 700px) {
-    .window { grid-template-columns: 1fr; padding: 12px; margin: 12px; }
-    .password-container { grid-template-columns: 1fr; gap: 12px; }
-    .login-form, .return-form { grid-column: 1; text-align: center; }
-    .password-input { width: 100%; max-width: 360px; }
-    .button { width: 100%; max-width: none; }
+    background-color: #76408C;
+    color: white;
 }
