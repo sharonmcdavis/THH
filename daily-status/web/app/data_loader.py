@@ -7,10 +7,12 @@ def load_data_from_file():
         with open(DATA_FILE, "r") as file:
             data = json.load(file)
         # print(data)
-        data['students'] = sorted(data.get('students', []))
+        # data['students'] = sorted(data.get('students', {}))
+        data['students'] = dict(sorted(data.get('students', {}).items()))
+        print(data['students'])
         return data
     except FileNotFoundError:
-        return {"students": [], "times": [], "column1_options": {}, "column2_options": {}, "column3_options": {}, "column4_options": {}}
+        return {"students": {}, "times": [], "column1_options": {}, "column2_options": {}, "column3_options": {}, "column4_options": {}}
 
 def save_data_to_file(data):
     print("...in save_data_to_file")

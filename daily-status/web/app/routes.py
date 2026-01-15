@@ -7,33 +7,29 @@ main = Blueprint('main', __name__)
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    print("in the main default /")
     if request.method == 'POST':
+        username = request.form.get('username')
+        print("username:", username)
         password = request.form.get('password')
-        if password == WEB_PASSWORD:
+        if username and password == WEB_PASSWORD:
             # Save login state and timestamp in the session
+            session['username'] = username
+            print("username saved to session")
             session['logged_in'] = True
             session['login_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             return redirect(url_for('main.main_window'))
         else:
-            flash("Access restricted. Incorrect password.", "error")
+            flash("Access restricted. Invalid login credentials.", "error")
             return render_template('index.html')
     return render_template('index.html')
 
 @main.route('/main')
 @login_required
 def main_window():
-    from .data_storage import students, times, column1_options, column2_options, column3_options, column4_options  # Access directly
+    print("in the main main")
 
-    # Debugging prints
-    print("Session student:", session.get('student'))
-    print("Session time:", session.get('time'))
-    print("student:", students)
-    print("time:", times)
-    print("column1:", column1_options)
-    print("column2:", column2_options)
-    print("column3:", column3_options)
-    print("column4:", column4_options)
-
+    from .data_storage import students, times, column1_options, column2_options, column3_options, column4_options
     # Get the current date and format it
     current_date = datetime.now().strftime("%B %d, %Y")  # Example: "January 8, 2026"
 
@@ -79,6 +75,7 @@ def clear_session():
 @main.route('/submit', methods=['POST'])
 @login_required
 def submit():
+    print("in the main submit")
     """Handle form submission."""
     student = request.form.get('student')
     time = request.form.get('time')
@@ -96,6 +93,7 @@ def submit():
     session['column4'] = column4
     session['notes'] = notes
 
+    print("student:", student)
     print("notes:", notes)
     
     if not student:
@@ -123,6 +121,7 @@ def submit():
 
     # Collect selected values for each column
     data = {
+        "Username": session['username'],
         "Student": student,
         "Time": time,
         **selected_columns,

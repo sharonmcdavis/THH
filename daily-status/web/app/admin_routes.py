@@ -41,30 +41,50 @@ def verify_admin():
 @admin_login_required
 def admin_window():
     """Render the main page."""
+    data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/add_student', methods=['POST'])
 @login_required
 @admin_login_required
 def add_student():
-    from .data_storage import students
     """Add a new student."""
-    student = request.form.get('student')
-    print("student:", student)
+    if request.method == 'POST':
+        from .data_storage import students
+        student = request.form.get('student')
+        color = request.form.get('color')  # Get the student color from the form
 
-    if student and student.lower not in [s.lower() for s in students]:
-        students.append(student)
-        save_data()
-        flash(f"Student '{student}' added successfully!", "success")
-    else:
-        flash("Student already exists or is invalid.", "error")
+        if student and color:
+            print("\nstudents before:", students)
+            students[student] = color  # Assuming `students` is a dictionary
+            save_data()
+            print("saved student")
+            flash(f"Student {student} added successfully!", "success")
+        else:
+            flash("Failed to add student. Please provide both name and color.", "error")
+
+    print("\nstudents after:", students)
+
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/remove_student', methods=['POST'])
@@ -75,15 +95,22 @@ def remove_student():
     """Remove a student."""
     student = request.form.get('student')
     if student and student in students:
-        students.remove(student)
+        del students[student]
         save_data()
         flash(f"Student '{student}' removed successfully!", "success")
     else:
         flash("Student not found.", "error")
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/add_time', methods=['POST'])
@@ -99,10 +126,17 @@ def add_time():
         flash(f"Time '{time}' added successfully!", "success")
     else:
         flash("Time already exists or is invalid.", "error")
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/remove_time', methods=['POST'])
@@ -118,10 +152,18 @@ def remove_time():
         flash(f"Time '{time}' removed successfully!", "success")
     else:
         flash("Time not found.", "error")
+    
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/add_column', methods=['POST'])
@@ -152,10 +194,17 @@ def add_column():
         update_data(data)  # Save the updated data
         flash(f"Key '{key}' with value '{value}' added.", "success")
 
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
 
 @admin.route('/remove_column', methods=['POST'])
@@ -171,10 +220,7 @@ def remove_column():
 
     # Extract the column name and value
     column_name, value_to_remove = next(iter(form_data.items()))
-    print(f"Column: {column_name}, Value: {value_to_remove}")
-
     data = load_data_from_file()
-    print("data:", data)
     
     # Ensure the column exists in the data
     if column_name in data and value_to_remove in data[column_name]:
@@ -186,11 +232,32 @@ def remove_column():
     else:
         flash(f"Value '{value_to_remove}' not found.", "error")
 
+    # Load data from the file
     data = load_data_from_file()
+
+    # Filter available colors
+    available_colors = get_available_colors(data)
+
+    # Render the admin.html template with both `data` and `available_colors`
     return render_template(
         'admin.html',
-        data=data
+        data=data,
+        available_colors=available_colors
     )
+
+def get_available_colors(data):
+    students = data.get('students', {})  # Get the students dictionary
+    colors = data.get('colors', {})  # Get the colors dictionary
+
+    # Filter available colors
+    available_colors = {
+        key: value
+        for key, value in colors.items()
+        if value not in students.values()  # Check if the color is not assigned to any student
+    }
+
+    return available_colors
+
 
 @admin.route('/excel', methods=['POST'])
 @login_required

@@ -1,15 +1,19 @@
 /* Base Styles for All Pages */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
+    margin: 10px;
     padding: 0;
     background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .window {
     max-width: 95%; /* Set a maximum width for the window */
     width: 100%; /* Make the window responsive */
-    margin: 0 auto; /* Center the window on the page */
+    margin: 10px auto; /* Center the window on the page */
     padding: 20px; /* Add padding inside the window */
     border: 1px solid #ccc; /* Optional: Add a border */
     border-radius: 8px; /* Optional: Add rounded corners */
@@ -20,6 +24,8 @@ body {
 }
 
 .header {
+    max-width: 600px; /* Set a maximum width for the window */
+    width: 100%; /* Make the window responsive */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,8 +46,31 @@ body {
 }
 
 .title-container h1 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     margin: 0;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    width: 100%;
+    max-width: 400px; /* Limit the form width */
+    margin: 10px;
+}
+
+/* Ensure each section fits within its column */
+.section {
+    padding: 5px;
+    background-color: #ffffff; /* Optional: Add a background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    overflow: auto; /* Add scrollbars if content overflows */
+}
+
+.section h2 {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
     text-align: center;
 }
 
@@ -75,9 +104,10 @@ body {
 
 .button {
     display: block;
-    width: 200px;
+    width: 100%;
+    max-width: 200px;
     height: 40px;
-    margin: 3px auto;
+    margin: 6px auto;
     background-color: #428C41;
     color: white;
     border: none;
@@ -87,6 +117,7 @@ body {
     text-align: center;
     font-weight: bold;
     transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 10px;
 }
 
 .button:hover {
@@ -144,12 +175,32 @@ input {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    width: 100%;
+    width: 200px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin: 3px auto;
+    display: block;
 }
 
 input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin: 3px auto;
+    display: block;
+}
+
+select:focus {
     border-color: #4CAF50;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -159,10 +210,5 @@ input:focus {
         grid-template-columns: 1fr;
         padding: 12px;
         margin: 12px;
-    }
-
-    .button {
-        width: 100%;
-        max-width: none;
     }
 }

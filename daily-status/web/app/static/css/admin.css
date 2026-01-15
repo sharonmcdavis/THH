@@ -1,43 +1,53 @@
-/* Admin-Specific Styles */
-.header-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    justify-items: stretch;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%;
+.admin-window {
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    gap: 20px; /* Add spacing between columns */
+    align-items: start; /* Vertically align items to the top */
+    margin: 10px; /* Add spacing between rows */
+}
+/* Style the <h2> header */
+.admin-window h2 {
+    margin: 0; /* Remove default margin */
+    text-align: left; /* Align text to the left */
 }
 
-.add-button {
-    background-color: #b9ebb9;
-    color: #333;
-    border: 1px solid #428C41;
+/* Style the forms */
+.admin-window form {
+    display: flex;
+    flex-direction: column; /* Stack inputs and buttons vertically */
+    gap: 10px; /* Add spacing between inputs and buttons */
 }
 
-.add-button:hover {
-    background-color: #428C41;
-    color: white;
+/* Style for input boxes, select boxes, and buttons */
+.admin-window input[type="text"],
+.admin-window select,
+.admin-window button {
+    width: 100%; /* Make all elements take up the full width of their container */
+    max-width: 300px; /* Optional: Set a maximum width for better readability */
+    padding: 10px; /* Add padding for consistent height */
+    font-size: 16px; /* Ensure consistent font size */
+    box-sizing: border-box; /* Include padding and border in the width */
 }
 
-.remove-button {
-    background-color: #dbb1e0;
-    color: #333;
-    border: 1px solid #76408C;
+/* Optional: Add spacing between elements */
+.admin-window form > * {
+    margin-bottom: 10px; /* Add spacing between form elements */
 }
 
-.remove-button:hover {
-    background-color: #76408C;
-    color: white;
+/* Style for the separator */
+.form-separator {
+    border: none; /* Remove default border */
+    border-top: 1px solid #ccc; /* Add a thin top border */
+    border-bottom: 1px solid #f9f9f9; /* Add a lighter bottom border for a recessed effect */
+    margin: 20px 0; /* Add spacing above and below the separator */
+    width: 100%; /* Ensure it spans the full width */
+    grid-column: 1 / -1; /* Make the separator span all columns in the grid */
 }
 
-.report-button {
-    background-color: #b9ebb9;
-    color: #333;
-    border: 1px solid #428C41;
-}
-
-.report-button:hover {
-    background-color: #428C41;
-    color: white;
+@media (max-width: 700px) {
+    .window {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        margin: 12px;
+    }
 }

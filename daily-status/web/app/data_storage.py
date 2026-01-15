@@ -7,36 +7,39 @@ from reportlab.pdfgen import canvas
 from .utils import DATA_FILE, EXCEL_FILE, PDF_FILE
 
 # Global variables
-students = []
+students = {}
 times = []
 column1_options = {}
 column2_options = {}
 column3_options = {}
 column4_options = {}
+colors = {}
 
 def initialize_data():
     print("...in initialize_data")
     """Load data from the JSON file into global variables."""
-    global students, times, column1_options, column2_options, column3_options, column4_options
+    global students, times, column1_options, column2_options, column3_options, column4_options, colors
     try:
         with open(DATA_FILE, "r") as file:
             data = json.load(file)
-            students = data.get("students", [])
+            students = data.get("students", {})  # Load as a dictionary
             times = data.get("times", [])
             column1_options = data.get("column1_options", {})  # Load as a dictionary
             column2_options = data.get("column2_options", {})  # Load as a dictionary
             column3_options = data.get("column3_options", {})  # Load as a dictionary
             column4_options = data.get("column4_options", {})  # Load as a dictionary
-        students = sorted(students)
+            colors = data.get("colors", {})
+        students = dict(sorted(students.items(), key=lambda x: x[0], reverse=False))
 
     except FileNotFoundError:
         print(f"{DATA_FILE} not found. Using default values.")
-        students = []
+        students = {}
         times = []
         column1_options = {}
         column2_options = {}
         column3_options = {}
-        column4_options = []
+        column4_options = {}
+        colors = {}
 
 def save_data():
     data = {
@@ -46,6 +49,7 @@ def save_data():
         "column2_options": column2_options,
         "column3_options": column3_options,
         "column4_options": column4_options,
+        "colors": colors,
     }
     update_data(data)
 
@@ -185,6 +189,11 @@ def write_to_excel(data):
     # Join the remaining values into a single string with a newline delimiter
     concatenated_values = "\n".join(values_to_concatenate)
 
+    print("concat value:", concatenated_values)
+    username = data.get("Username", "N/A")
+    print("username:", username)
+    # Concatenate the username with the other values
+    concatenated_values = "(" + username + ") " + concatenated_values
     print("concat value:", concatenated_values)
 
     # Write the concatenated values to the appropriate cell

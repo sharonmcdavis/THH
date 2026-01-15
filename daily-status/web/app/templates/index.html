@@ -11,10 +11,18 @@
 {% endblock %}
 
 {% block content %}
-    <section class="password-container" role="region" aria-label="Login">
-        <form action="/" method="POST" class="login-form" aria-label="Site password form">
+<section class="window title-container" role="region" aria-label="Login">
+    <form action="/" method="POST" aria-label="Site Login form">
+        <!-- Username Input -->
+        <div>
+            <input class="username-input" type="text" name="username" placeholder="Employee Initials" required aria-required="true">
+        </div>
+        
+        <!-- Password Input and Submit Button -->
+        <div>
             <input class="password-input" type="password" name="password" placeholder="Enter Password" required aria-required="true">
             <button class="button" type="submit">Enter</button>
-        </form>
-    </section>
+        </div>
+    </form>
+</section>
 {% endblock %}

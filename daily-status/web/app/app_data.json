@@ -1,16 +1,18 @@
 {
     "students": {
-        "Arturo": "red",
-        "Braxton": "orange",
-        "Cami": "yellow",
-        "Emmy": "green",
-        "Joshua": "blue",
-        "Journee": "purple",
-        "Nate": "pink",
-        "Rip": "brown",
-        "Roar": "gray",
-        "Silas": "black",
-        "Zi": "teal"
+        "Arturo": "#FF0000",
+        "Braxton": "#0000FF",
+        "Cami": "#008000",
+        "Emmy": "#FFFF00",
+        "Joshua": "#808080",
+        "Journee": "#FF1493",
+        "Nate": "#000080",
+        "Rip": "#00FF00",
+        "Roar": "#FF8C00",
+        "Silas": "#00FFFF",
+        "Zi": "#663399",
+        "jtd": "#FF00FF",
+        "booyah": "#4B0082"
     },
     "times": [
         "7:30",
@@ -36,7 +38,8 @@
     },
     "column2_options": {
         "+": "+ stood and peed",
-        "-": "- stood and did nothing"
+        "-": "- stood and did nothing",
+        "s": "some test"
     },
     "column3_options": {
         "S+": "S+ sat and peed",
@@ -46,7 +49,29 @@
     "column4_options": {
         "C+": "C+ peed in cup",
         "C-": "C- stood but did not pee in cup",
-        "ACC-W": "ACC - had a wet accident in underwear",
-        "ACC-BM": "ACC - had a BM accident in underwear"
+        "ACC-W": "ACC - WET accident",
+        "ACC-BM": "ACC - BM accident"
+    },
+    "colors": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Green": "#008000",
+        "Yellow": "#FFFF00",
+        "Purple": "#663399",
+        "Aqua": "#00FFFF",
+        "Fuchsia": "#FF00FF",
+        "Orange": "#FF8C00",
+        "Maroon": "#800000",
+        "Teal": "#008080",
+        "Navy": "#000080",
+        "Lime": "#00FF00",
+        "Gray": "#808080",
+        "Indigo": "#4B0082",
+        "Turquoise": "#40E0D0",
+        "Vioet": "#EE82EE",
+        "Crimson": "#DC143C",
+        "Black": "#000000",
+        "Pink": "#FF1493",
+        "Sky Blue": "#00BFFF"
     }
 }

@@ -1,29 +1,13 @@
 /* Main-Specific Styles */
-/* Main-Specific Styles */
 .main-window {
     display: grid; /* Use CSS Grid for layout */
     grid-template-columns: 1fr 1fr 1fr; /* Define three equal columns */
-    gap: 10px; /* Add spacing between columns */
+    /* gap: 10px; Add spacing between columns */
     max-width: 100%; /* Ensure it does not exceed the parent container's width */
     width: 100%; /* Make it take up the full width of the parent */
     padding: 5px; /* Add padding inside the container */
     box-sizing: border-box; /* Include padding and border in the element's width */
     overflow: hidden; /* Prevent content from overflowing */
-}
-
-/* Ensure each section fits within its column */
-.section {
-    padding: 5px;
-    background-color: #ffffff; /* Optional: Add a background color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
-    overflow: auto; /* Add scrollbars if content overflows */
-}
-
-.section h2 {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 10px;
-    text-align: center;
 }
 
 .button-group {
@@ -93,5 +77,9 @@ textarea {
     border-radius: 5px;
     font-size: 14px;
     resize: vertical; /* Allow vertical resizing */
+    overflow-wrap: break-word; /* Break long words to prevent overflow */
+    word-wrap: break-word; /* For older browser compatibility */
+    box-sizing: border-box; /* Include padding and border in the element's width */
+
 }
 

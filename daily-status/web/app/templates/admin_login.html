@@ -3,7 +3,6 @@
 {% block title %}The Helping House - Admin Login{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_login.css') }}">
 {% endblock %}
 
 {% block header %}
@@ -11,16 +10,14 @@
 {% endblock %}
 
 {% block content %}
-  <div class="window header" role="region" aria-label="Main form">
-
-    <section class="password-container" role="region" aria-label="Admin login">
+    <section class="window title-container" role="region" aria-label="Admin login">
         <h3>Admin Functions</h3>
-        <form action="{{ url_for('admin.verify_admin') }}" method="POST" class="login-form" aria-label="Admin password form">
+        <form action="{{ url_for('admin.verify_admin') }}" method="POST" aria-label="Admin password form">
             <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required aria-required="true">
             <button type="submit" class="button green-button">Admin Login</button>
         </form>
 
-        <form action="/main" method="GET" class="return-form">
+        <form action="/main" method="GET">
             <button type="submit" class="button purple-button">Return</button>
         </form>
     </section>

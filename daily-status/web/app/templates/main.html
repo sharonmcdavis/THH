@@ -4,6 +4,41 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <style>
+        {% for student, color in students.items() %}
+        student::{{student}}
+        color::{{color}}
+        {% if color.startswith('#') and color|length == 7 %}
+
+            /* Style the input and label for each student */
+            input[type="radio"].student-{{ student|lower }} {
+                accent-color: {{ color }}; /* Use the student's color for the radio button */
+            }            
+
+            label.student-{{ student|lower }} {
+                background-color: {{ color|lighten(0.8) }}; /* Light version of the student's color */
+                color: {{ color|darken(0.2) }}; /* Text color */
+                border: 1px solid {{ color|darken(0.2) }}; /* Slightly darker border */
+                padding: 10px 15px; /* Add padding for better appearance */
+                border-radius: 5px; /* Rounded corners */
+                display: inline-block; /* Make the label look like a button */
+                cursor: pointer; /* Add a pointer cursor for better UX */
+            }
+
+            label.student-{{ student|lower }}:hover {
+                background-color: {{ color }}; /* Same as the checked color */
+                color: white; /* White text on hover */
+            }
+
+            /* Style the label when the corresponding input is selected */
+            input[type="radio"].student-{{ student|lower }}:checked + label {
+                background-color: {{ color }}; /* Even darker version when selected */
+                color: white; /* White text when selected */
+                border-color: {{ color|darken(0.4) }}; /* Match the border to the background */
+            }
+        {% endif %}
+        {% endfor %}
+    </style>
 {% endblock %}
 
 {% block nav %}
@@ -19,13 +54,10 @@
         <div class="section">
             <h2>Students</h2>
             <div class="button-group">
-                {% if students %}
-                    {% for s in students %}
-                    <input type="radio" id="student{{ loop.index }}" name="student" value="{{ s }}" 
-                        {% if s == student %}checked{% endif %}>
-                    <label for="student{{ loop.index }}">{{ s }}</label>
-                    {% endfor %}
-                {% endif %}                    
+                {% for student, color in students.items() %}
+                    <input type="radio" id="student-{{ student|lower }}" class="student-{{ student|lower }}" name="student" value="{{ student }}">
+                    <label for="student-{{ student|lower }}" class="student-{{ student|lower }}">{{ student }}</label>
+                {% endfor %}
             </div>
         </div>
 
@@ -35,6 +67,8 @@
             <div class="button-group">
                 {% if times %}
                     {% for t in times %}
+                    <!-- t = {{t}}
+                    times = {{times}} -->
                     <input type="radio" id="time{{ loop.index }}" name="time" value="{{ t }}"
                         {% if t == time %}checked{% endif %}>
                     <label for="time{{ loop.index }}">{{ t }}</label>
