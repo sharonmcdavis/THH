@@ -1,12 +1,11 @@
+from datetime import datetime
 from tkinter import messagebox
 from flask import Blueprint, render_template, request, redirect, session, url_for, flash, send_file
-from fpdf import FPDF
 import openpyxl
-from .data_storage import save_data, update_data, EXCEL_FILE, PDF_FILE
+from .data_storage import save_data, update_data, EXCEL_FILE
 from .data_loader import load_data_from_file
 from .utils import login_required, ADMIN_PASSWORD, admin_login_required
 import os
-from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
 admin = Blueprint('admin', __name__)
@@ -41,17 +40,8 @@ def verify_admin():
 @admin_login_required
 def admin_window():
     """Render the main page."""
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/add_student', methods=['POST'])
 @login_required
@@ -74,18 +64,8 @@ def add_student():
 
     print("\nstudents after:", students)
 
-    # Load data from the file
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/remove_student', methods=['POST'])
 @login_required
@@ -100,18 +80,8 @@ def remove_student():
         flash(f"Student '{student}' removed successfully!", "success")
     else:
         flash("Student not found.", "error")
-    # Load data from the file
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/add_time', methods=['POST'])
 @login_required
@@ -126,18 +96,8 @@ def add_time():
         flash(f"Time '{time}' added successfully!", "success")
     else:
         flash("Time already exists or is invalid.", "error")
-    # Load data from the file
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/remove_time', methods=['POST'])
 @login_required
@@ -153,18 +113,8 @@ def remove_time():
     else:
         flash("Time not found.", "error")
     
-    # Load data from the file
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/add_column', methods=['POST'])
 @login_required
@@ -194,18 +144,8 @@ def add_column():
         update_data(data)  # Save the updated data
         flash(f"Key '{key}' with value '{value}' added.", "success")
 
-    # Load data from the file
-    data = load_data_from_file()
+    return load_admin_page()
 
-    # Filter available colors
-    available_colors = get_available_colors(data)
-
-    # Render the admin.html template with both `data` and `available_colors`
-    return render_template(
-        'admin.html',
-        data=data,
-        available_colors=available_colors
-    )
 
 @admin.route('/remove_column', methods=['POST'])
 @login_required
@@ -231,7 +171,10 @@ def remove_column():
         flash(f"Value '{value_to_remove}' removed.", "success")
     else:
         flash(f"Value '{value_to_remove}' not found.", "error")
+    return load_admin_page()
 
+
+def load_admin_page():
     # Load data from the file
     data = load_data_from_file()
 
@@ -277,158 +220,27 @@ def excel():
     
     return send_file(EXCEL_FILE, as_attachment=True)
 
-class PDF(FPDF):
-    def __init__(self, orientation="L", unit="mm", format="A4"):
-        super().__init__(orientation, unit, format)
-        self.set_auto_page_break(auto=True, margin=10)
+@admin.route('/clear_excel', methods=['POST'])
+def clear_excel():
+    try:
+        # Get the current datetime stamp
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-    def add_table(self, data, page_width, col_headers=None):
-        self.set_font("Arial", size=8)
+        # Extract the directory and file name
+        directory, file_name = os.path.split(EXCEL_FILE)
+        file_name_without_ext, file_ext = os.path.splitext(file_name)
 
-        # Calculate column widths dynamically
-        num_columns = len(data[0]) if data else 1
-        col_width = page_width / num_columns
+        # Create the new file name with the timestamp
+        new_file_name = f"{file_name_without_ext}_{timestamp}{file_ext}"
+        new_file_path = os.path.join(directory, new_file_name)
 
-        # Add column headers if provided
-        if col_headers:
-            for header in col_headers:
-                self.cell(col_width, 10, header, border=1, align="C")
-            self.ln()
+        # Rename the file
+        os.rename(EXCEL_FILE, new_file_path)
 
-        # Add rows of data
-        for row in data:
-            for cell in row:
-                self.cell(col_width, 10, str(cell) if cell is not None else "", border=1, align="C")
-            self.ln()
+        # Flash a success message
+        flash(f"Excel file cleared and backed up to {new_file_name}", "success")
+    except Exception as e:
+        # Flash an error message if something goes wrong
+        flash(f"Error renaming Excel file: {str(e)}", "error")
 
-@admin.route('/pdf', methods=['POST'])
-@login_required
-@admin_login_required
-def pdf():
-    from .data_storage import EXCEL_FILE, PDF_FILE
-    from openpyxl import load_workbook
-    from fpdf import FPDF
-
-    if not os.path.exists(EXCEL_FILE):
-        flash("Excel file not found.", "error")
-        return redirect(url_for('admin.admin_window'))
-
-    # Load the workbook
-    workbook = load_workbook(EXCEL_FILE)
-
-    # Create a PDF object
-    pdf = FPDF(orientation="L", unit="mm", format="A4")
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.set_font("Arial", size=10)
-
-    for sheet_name in workbook.sheetnames:
-        sheet = workbook[sheet_name]
-
-        # Split columns into three groups
-        columns_group_1 = list(sheet.iter_cols(min_col=1, max_col=11, values_only=True))  # A-K
-        columns_group_2 = [list(sheet.iter_cols(min_col=1, max_col=1, values_only=True))[0]]  # A (repeated)
-        columns_group_2 += list(sheet.iter_cols(min_col=12, max_col=21, values_only=True))  # L-U
-        columns_group_3 = [list(sheet.iter_cols(min_col=1, max_col=1, values_only=True))[0]]  # A (repeated)
-        columns_group_3 += list(sheet.iter_cols(min_col=22, max_col=32, values_only=True))  # V-AF
-
-        # Add the first page for columns A-K
-        pdf.add_page()
-        pdf.cell(0, 10, f"{sheet_name} (1-10)", ln=True, align="C")
-        pdf.ln(5)
-        add_columns_to_pdf(pdf, columns_group_1)
-
-        # Add the second page for column A and columns L-U
-        pdf.add_page()
-        pdf.cell(0, 10, f"{sheet_name} (11-20)", ln=True, align="C")
-        pdf.ln(5)
-        add_columns_to_pdf(pdf, columns_group_2)
-
-    # Add the third page for column A and columns V-AF
-    pdf.add_page()
-    pdf.cell(0, 10, f"{sheet_name} (21-30/31)", ln=True, align="C")
-    pdf.ln(5)
-    add_columns_to_pdf(pdf, columns_group_3)
-
-    # Save the PDF file
-    pdf.output(PDF_FILE)
-    print(f"PDF saved to {PDF_FILE}")
-    # os.startfile(PDF_FILE)
-
-    if not os.path.exists(PDF_FILE):
-        flash("PDF file not found.", "error")
-        return
-    return send_file(PDF_FILE, as_attachment=True)
-
-
-def add_columns_to_pdf(pdf, columns):
-    """
-    Add columns of data to the PDF.
-    Each column is treated as a row in the PDF.
-    Dynamically wrap text to fit within the cell and ensure proper alignment.
-    """
-    # Transpose the columns to rows for easier processing
-    rows = list(zip(*columns))
-
-    # Calculate column width dynamically
-    page_width = pdf.w - 20  # Account for margins
-    col_width = page_width / len(columns)
-
-    # Add rows to the PDF
-    for row in rows:
-        # Calculate the height of the tallest cell in the row
-        row_heights = []
-        wrapped_cells = []
-        for cell in row:
-            text = str(cell) if cell is not None else ""
-            wrapped_text, font_size = wrap_text_to_fit(text, col_width, pdf)
-            wrapped_cells.append((wrapped_text, font_size))
-            row_heights.append(10 * len(wrapped_text.split("\n")))  # 10 units per line
-
-        max_row_height = max(row_heights)
-
-        # Check if the row fits on the current page
-        if pdf.get_y() + max_row_height > pdf.h - 15:  # Account for bottom margin
-            pdf.add_page()  # Add a new page if the row doesn't fit
-
-        # Write each cell in the row
-        y_start = pdf.get_y()  # Get the starting y-coordinate of the row
-        for i, (cell_text, font_size) in enumerate(wrapped_cells):
-            x_start = pdf.get_x()  # Get the starting x-coordinate of the cell
-            pdf.set_font("Arial", size=font_size)  # Set the font size for the cell
-            pdf.multi_cell(col_width, 10, cell_text, border=1, align="C")
-            pdf.set_xy(x_start + col_width, y_start)  # Move to the next cell in the row
-
-        # Move to the next row
-        pdf.set_y(y_start + max_row_height)
-
-def wrap_text_to_fit(text, col_width, pdf):
-    """
-    Wrap text to fit within the cell width by breaking it into multiple lines.
-    Dynamically adjust font size for multi-line text.
-    """
-    max_font_size = 10  # Default font size
-    min_font_size = 6   # Minimum font size for multi-line text
-    wrapped_lines = []
-    current_line = ""
-
-    # Split the text into words
-    words = text.split(" ")
-
-    for word in words:
-        # Check if adding the word exceeds the column width
-        if len(current_line) + len(word) + 1 <= 10 and pdf.get_string_width(current_line + " " + word) <= col_width - 2:
-            current_line += " " + word if current_line else word
-        else:
-            wrapped_lines.append(current_line)  # Add the current line to the wrapped lines
-            current_line = word  # Start a new line with the current word
-
-    # Add the last line
-    if current_line:
-        wrapped_lines.append(current_line)
-
-    # Adjust font size based on the number of lines
-    num_lines = len(wrapped_lines)
-    font_size = max(min_font_size, max_font_size - (num_lines - 1))
-
-    # Join the wrapped lines with newline characters
-    return "\n".join(wrapped_lines), font_size
+    return load_admin_page()

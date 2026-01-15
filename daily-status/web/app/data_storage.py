@@ -3,8 +3,7 @@ import json
 from tkinter import messagebox
 import openpyxl
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from .utils import DATA_FILE, EXCEL_FILE, PDF_FILE
+from .utils import DATA_FILE, EXCEL_FILE
 
 # Global variables
 students = {}
@@ -67,7 +66,6 @@ from openpyxl.styles import Alignment
 from datetime import datetime
 import os
 from openpyxl import load_workbook
-from fpdf import FPDF
 from openpyxl.styles import PatternFill
 
 def apply_alternate_shading(sheet):
@@ -147,11 +145,8 @@ def write_to_excel(data):
         print("sheet already exists")
         sheet = workbook[sheet_name]
 
-    print("sheet: ", sheet)
-    print("data['Time']:", data["Time"])
     for idx, time in enumerate(times, start=3):
         sheet[f"A{idx}"] = time
-        print(f"Writing time '{time}' to A{idx}")
 
     # Find the column for the current day
     day_column = None
@@ -168,8 +163,6 @@ def write_to_excel(data):
     # Find the row for the selected time
     time_row = None
     for row in range(3, sheet.max_row + 1):  # Start from row 3
-        print("row: ", row)
-        print("data[time]:", data["Time"])
         if sheet[f"A{row}"].value == data["Time"]:
             time_row = row
             break
@@ -189,12 +182,9 @@ def write_to_excel(data):
     # Join the remaining values into a single string with a newline delimiter
     concatenated_values = "\n".join(values_to_concatenate)
 
-    print("concat value:", concatenated_values)
     username = data.get("Username", "N/A")
-    print("username:", username)
     # Concatenate the username with the other values
     concatenated_values = "(" + username + ") " + concatenated_values
-    print("concat value:", concatenated_values)
 
     # Write the concatenated values to the appropriate cell
     sheet[f"{day_column}{time_row}"] = concatenated_values
