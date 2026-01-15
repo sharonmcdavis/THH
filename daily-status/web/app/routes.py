@@ -43,6 +43,8 @@ def main_window():
     column4_selection = session.get('column4', '')
     notes = session.get('notes', '')
 
+    students = dict(sorted(students.items(), key=lambda item: item[0].casefold()))
+    
     """Render the main page."""
     return render_template(
         'main.html',

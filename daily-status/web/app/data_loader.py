@@ -7,8 +7,7 @@ def load_data_from_file():
         with open(DATA_FILE, "r") as file:
             data = json.load(file)
         # print(data)
-        # data['students'] = sorted(data.get('students', {}))
-        data['students'] = dict(sorted(data.get('students', {}).items()))
+        data['students'] = dict(sorted(data.get('students', {}).items(), key=lambda item: item[0].casefold()))
         print(data['students'])
         return data
     except FileNotFoundError:
