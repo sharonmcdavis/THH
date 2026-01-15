@@ -18,14 +18,14 @@ body {
     border: 1px solid #ccc; /* Optional: Add a border */
     border-radius: 8px; /* Optional: Add rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
-    background-color: #f9f9f9; /* Optional: Add a background color */
+    background-color: #fff; /* Optional: Add a background color */
     box-sizing: border-box; /* Include padding and border in the element's width */
     overflow: hidden; /* Prevent content from overflowing */
 }
 
 .header {
     max-width: 600px; /* Set a maximum width for the window */
-    width: 100%; /* Make the window responsive */
+    width: 100%; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,11 +52,11 @@ body {
 }
 
 form {
+    max-width: 600px; /* Set a maximum width for the window */
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    width: 100%;
-    max-width: 400px; /* Limit the form width */
-    margin: 10px;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
 }
 
 /* Ensure each section fits within its column */
@@ -104,20 +104,18 @@ form {
 
 .button {
     display: block;
-    width: 100%;
-    max-width: 200px;
+    width: 100%; /* Allow the button to resize based on text */
+    max-width: 200px; /* Remove the 200px cap */
+    padding: 10px 20px; /* Add consistent padding */
     height: 40px;
     margin: 6px auto;
-    background-color: #428C41;
-    color: white;
-    border: none;
-    border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
     text-align: center;
     font-weight: bold;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    padding: 10px;
+
+    text-align: center;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .button:hover {

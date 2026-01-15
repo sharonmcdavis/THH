@@ -34,6 +34,20 @@
     margin-bottom: 10px; /* Add spacing between form elements */
 }
 
+form div {
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Horizontally center the buttons */
+    justify-content: center; /* Vertically center the buttons */
+    gap: 10px; /* Add spacing between the input and button */
+}
+.equal-width-button {
+    display: inline-block; /* Ensures the button respects width */
+    width: 200px; /* Set a fixed width for both buttons */
+    text-align: center; /* Centers the text inside the button */
+    align-items: center;
+}
+
 /* Style for the separator */
 .form-separator {
     border: none; /* Remove default border */

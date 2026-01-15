@@ -3,6 +3,7 @@
 {% block title %}The Helping House - Admin Login{% endblock %}
 
 {% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 {% endblock %}
 
 {% block header %}
@@ -10,28 +11,19 @@
 {% endblock %}
 
 {% block content %}
-    <section class="window title-container" role="region" aria-label="Admin login">
-        <h3>Admin Functions</h3>
-        <form action="{{ url_for('admin.verify_admin') }}" method="POST" aria-label="Admin password form">
+<section class="window title-container" role="region" aria-label="Admin login">
+    <h3>Admin Functions</h3>
+    <form action="{{ url_for('admin.verify_admin') }}" method="POST" aria-label="Admin password form">
+        <div>
             <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required aria-required="true">
-            <button type="submit" class="button green-button">Admin Login</button>
-        </form>
+            <button type="submit" class="button green-button equal-width-button">Admin Login</button>
+        </div>
+    </form>
 
-        <form action="/main" method="GET">
-            <button type="submit" class="button purple-button">Return</button>
-        </form>
-    </section>
-
-    <div>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
+    <form action="/main" method="GET">
+        <div>
+            <button type="submit" class="button purple-button equal-width-button">Return</button>
+        </div>
+    </form>
+</section>
 {% endblock %}
-</div>
