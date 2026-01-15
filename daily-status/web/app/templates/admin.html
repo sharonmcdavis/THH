@@ -11,28 +11,54 @@
 {% block date %}<h4>{{ date }}</h4>{% endblock %}
 
 {% block nav %}
-<div class="header-buttons">
-    <form action="/main" method="GET"><button type="submit" class="button purple-button">Return</button></form>
-    <form action="/logout" method="GET"><button type="submit" class="button gray-button">Exit</button></form>
-    <form action="/admin/excel" method="POST"><button type="submit" class="button green-button">View Excel</button>
-    </form>
-    <form action="/todays-report" method="GET">
-        <button type="button" class="button green-button " onclick="openRouteInNewWindow('/todays-report')">
-            Today's Report</button>
+<div class="hamburger-menu">
+    <!-- Hamburger Icon -->
+    <button class="hamburger-icon" onclick="toggleMenu()">
+        ☰
+    </button>
 
-        <script>
-            function openRouteInNewWindow(route) {
-                const newWindow = window.open(route, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-                if (!newWindow) {
-                    alert('Popup blocked! Please allow popups for this website.');
-                }
-            }
-        </script>
-    </form>
-    <form action="/admin/clear_excel" method="POST">
-        <button type="submit" class="button blue-button">Clear Excel</button>
-    </form>
+    <!-- Hidden Menu -->
+    <div id="menu-items" class="menu-items">
+        <a href="/main" onclick="closeMenu()">Return</a>
+        <a href="/logout" onclick="closeMenu()">Exit</a>
+        <a href="/admin/excel" onclick="closeMenu()">View Excel</a>
+        <a href="/todays-report" onclick="openPopup(event, '/todays-report')">Today's Report</a>
+        <a href="/admin/clear_excel" onclick="closeMenu()">Clear Excel</a>
+    </div>
 </div>
+
+<script>
+    // Toggle the visibility of the menu
+    function toggleMenu() {
+        const menu = document.getElementById('menu-items');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close the menu
+    function closeMenu() {
+        const menu = document.getElementById('menu-items');
+        menu.style.display = 'none';
+    }
+    
+    // Close the menu when clicking anywhere outside the menu
+    document.addEventListener('click', function (event) {
+        const menu = document.getElementById('menu-items');
+        const hamburgerIcon = document.querySelector('.hamburger-icon');
+        if (menu.style.display === 'block' && !menu.contains(event.target) && event.target !== hamburgerIcon) {
+            menu.style.display = 'none';
+        }
+    });
+
+    // Open "Today's Report" in a popup window
+    function openPopup(event, url) {
+        closeMenu();
+        event.preventDefault(); // Prevent default link behavior
+        const newWindow = window.open(url, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        if (!newWindow) {
+            alert('Popup blocked! Please allow popups for this website.');
+        }
+    }
+</script>
 {% endblock %}
 
 {% block content %}

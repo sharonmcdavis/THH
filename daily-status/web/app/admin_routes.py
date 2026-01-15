@@ -202,7 +202,7 @@ def get_available_colors(data):
     return available_colors
 
 
-@admin.route('/excel', methods=['POST'])
+@admin.route('/excel', methods=['GET', 'POST'])
 @login_required
 @admin_login_required
 def excel():
@@ -211,16 +211,16 @@ def excel():
         try:
             print("Opening Excel file...")
             os.startfile(EXCEL_FILE)  # Opens the file with the default application
-            # flash(f"Excel file '{EXCEL_FILE}' opened successfully.", "success")
+            return send_file(EXCEL_FILE, as_attachment=True)
         except Exception as e:
             print(f"Error opening Excel file: {e}")
             flash(f"An error occurred while opening the Excel file: {e}", "error")
     else:
         flash("Excel file not found.", "error")
     
-    return send_file(EXCEL_FILE, as_attachment=True)
+    return load_admin_page()
 
-@admin.route('/clear_excel', methods=['POST'])
+@admin.route('/clear_excel', methods=['GET', 'POST'])
 def clear_excel():
     try:
         # Get the current datetime stamp
