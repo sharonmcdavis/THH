@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from datetime import datetime, timedelta
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session
+from datetime import datetime
 from .data_storage import initialize_data, write_to_excel
-from .utils import login_required, WEB_PASSWORD
+from .utils import login_required, WEB_PASSWORD, EXCEL_FILE
+import pandas as pd
 
 main = Blueprint('main', __name__)
 
@@ -144,3 +145,39 @@ def logout():
     session.clear()
     # Redirect to the index.html page
     return redirect(url_for('main.index'))    
+
+@main.route('/todays-report', methods=['GET'])
+def todays_report():
+    from datetime import datetime
+
+    # Get today's date
+    today = datetime.now().strftime('%B %d, %Y')  # Format as "Month Day, Year"
+
+
+    try:
+        # Load all sheets from the Excel file
+        excel_data = pd.read_excel(EXCEL_FILE, sheet_name=None)  # Load all sheets as a dictionary
+        sheets_data = {}    
+
+        for sheet_name, df in excel_data.items():
+            # Skip the first row of the DataFrame
+            df = df.iloc[1:].reset_index(drop=True)
+
+            # Remove the word "Unnamed:" from column names
+            df = df.rename(columns=lambda x: str(x).replace('Unnamed:', '').strip())
+
+            # Replace NaN values with empty strings
+            df = df.fillna('')
+
+            # Convert numeric columns to integers where possible
+            df = df.applymap(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x)
+
+            # Store the cleaned data for each sheet
+            sheets_data[sheet_name] = df.to_dict(orient='records')
+
+        # Render the data in the HTML template
+        return render_template('todays_report.html', sheets_data=sheets_data, today=today)
+
+    except FileNotFoundError:
+        # Handle the case where the Excel file is not found
+        return render_template('todays_report.html', sheets_data={}, today=today)

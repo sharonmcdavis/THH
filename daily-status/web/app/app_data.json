@@ -10,9 +10,7 @@
         "Rip": "#00FF00",
         "Roar": "#FF8C00",
         "Silas": "#00FFFF",
-        "Zi": "#663399",
-        "jtd": "#FF00FF",
-        "booyah": "#4B0082"
+        "Zi": "#663399"
     },
     "times": [
         "7:30",
@@ -38,8 +36,7 @@
     },
     "column2_options": {
         "+": "+ stood and peed",
-        "-": "- stood and did nothing",
-        "s": "some test"
+        "-": "- stood and did nothing"
     },
     "column3_options": {
         "S+": "S+ sat and peed",

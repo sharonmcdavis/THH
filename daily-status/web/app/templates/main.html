@@ -42,11 +42,36 @@
 {% endblock %}
 
 {% block nav %}
-  <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button green-button">Admin</button></form>
-  <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button gray-button">Exit</button></form>
+    <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button green-button">Admin</button></form>
+    <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button gray-button">Exit</button></form>
+    <form action="/todays-report" method="GET" style="margin:0 8px">
+        <button type="button" class="button purple-button" onclick="openRouteInNewWindow('/todays-report')">
+            Today's Report</button>
+
+        <script>
+            function openRouteInNewWindow(route) {
+                const newWindow = window.open(route, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+                if (!newWindow) {
+                    alert('Popup blocked! Please allow popups for this website.');
+                }
+            }
+        </script>
+    </form>
+
 {% endblock %}
 
 {% block content %}
+<!-- Popup Window -->
+<div id="data-popup" class="popup hidden">
+    <div class="popup-content">
+        <span class="close-button" onclick="closeDataPopup()">&times;</span>
+        <h2>Today's Data</h2>
+        <div id="data-container">
+            <!-- Data will be dynamically loaded here -->
+        </div>
+    </div>
+</div>
+
 <form action="/submit" method="POST">
 <div class="window">
   <div class="main-window" role="region" aria-label="Main form">
@@ -129,4 +154,6 @@
     </div>
 </div>
 </form>
+
+
 {% endblock %}

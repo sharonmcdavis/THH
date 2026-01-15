@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .sheet-title {
+            margin-top: 40px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .no-data {
+            color: red;
+            font-weight: bold;
+        }
+        .page-break {
+            page-break-after: always; /* Add a page break after each sheet */
+        }
+    </style>
+</head>
+<body>
+    <h1>Today's Report</h1>
+    <p>Date: {{ today }}</p>
+
+    {% if sheets_data %}
+        {% for sheet_name, data in sheets_data.items() %}
+            <div class="sheet-title">Sheet: {{ sheet_name }}</div>
+            {% if data %}
+                <table>
+                    <thead>
+                        <tr>
+                            {% for column in data[0].keys() %}
+                                <th>{{ column }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                            <tr>
+                                {% for value in row.values() %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="no-data">No data available in this sheet.</p>
+            {% endif %}
+            <div class="page-break"></div> <!-- Add a page break after each sheet -->
+        {% endfor %}
+    {% else %}
+        <p class="no-data">No data available for today.</p>
+    {% endif %}
+</body>
+</html>
