@@ -202,21 +202,25 @@ def get_available_colors(data):
     return available_colors
 
 
-@admin.route('/excel', methods=['GET', 'POST'])
+@admin.route('/excel', methods=['GET'])
 @login_required
 @admin_login_required
 def excel():
-    # Check if the file exists
-    if os.path.exists(EXCEL_FILE):
-        try:
-            print("Opening Excel file...")
-            os.startfile(EXCEL_FILE)  # Opens the file with the default application
-            return send_file(EXCEL_FILE, as_attachment=True)
-        except Exception as e:
-            print(f"Error opening Excel file: {e}")
-            flash(f"An error occurred while opening the Excel file: {e}", "error")
-    else:
-        flash("Excel file not found.", "error")
+    try:
+        # Check if the file exists
+        if not os.path.exists(EXCEL_FILE):
+            raise FileNotFoundError(f"File not found: {EXCEL_FILE}")
+        
+        # Send the file as a downloadable response
+        return send_file(EXCEL_FILE, as_attachment=True)
+    except FileNotFoundError as e:
+        # Flash an error message if the file is not found
+        flash(f"An error occurred while opening the Excel file: {str(e)}", "error")
+        return redirect(url_for('admin.admin_window'))
+    except Exception as e:
+        # Handle other exceptions
+        flash(f"An unexpected error occurred: {str(e)}", "error")
+        return redirect(url_for('admin.admin_window'))
     
     return load_admin_page()
 
