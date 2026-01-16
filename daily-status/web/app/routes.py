@@ -1,7 +1,9 @@
+import os
+import shutil
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session
 from datetime import datetime
 from .data_storage import initialize_data, write_to_excel
-from .utils import login_required, WEB_PASSWORD, EXCEL_FILE
+from .utils import login_required, WEB_PASSWORD, EXCEL_FILE, BACKUP_FOLDER
 import pandas as pd
 
 main = Blueprint('main', __name__)
@@ -11,25 +13,48 @@ def index():
     print("in the main default /")
     if request.method == 'POST':
         username = request.form.get('username')
-        print("username:", username)
         password = request.form.get('password')
         if username and password == WEB_PASSWORD:
             # Save login state and timestamp in the session
             session['username'] = username
-            print("username saved to session")
             session['logged_in'] = True
             session['login_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            create_backup()
             return redirect(url_for('main.main_window'))
         else:
             flash("Access restricted. Invalid login credentials.", "error")
             return render_template('index.html')
     return render_template('index.html')
 
+def create_backup():
+    print("create backup file")
+    print("EXCEL_FILE:", EXCEL_FILE)
+    try:
+        # Ensure the backup folder exists
+        if not os.path.exists(BACKUP_FOLDER):
+            print("backup folder does NOT exist")
+            os.makedirs(BACKUP_FOLDER)
+            print("backup folder created")
+
+        # Generate the daily backup filename
+        today_date = datetime.now().strftime('%Y-%m-%d')
+        daily_backup_file = os.path.join(BACKUP_FOLDER, f"excel_backup_{today_date}.xlsx")
+        print("backup file:", daily_backup_file)
+
+        # Check if the backup already exists
+        if not os.path.exists(daily_backup_file):
+            print("backup file does NOT exist - create")
+            # Create the backup if it doesn't exist
+            shutil.copy(EXCEL_FILE, daily_backup_file)
+            print(f"Daily backup created: {daily_backup_file}")
+        else:
+            print(f"Backup for today already exists: {daily_backup_file}")
+    except Exception as e:
+        print(f"Error creating backup: {e}")
+
 @main.route('/main')
 @login_required
 def main_window():
-    print("in the main main")
-
     from .data_storage import students, times, column1_options, column2_options, column3_options, column4_options
     # Get the current date and format it
     current_date = datetime.now().strftime("%B %d, %Y")  # Example: "January 8, 2026"
