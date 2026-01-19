@@ -1,7 +1,7 @@
 /* Base Styles for All Pages */
 body {
     font-family: Arial, sans-serif;
-    margin: 10px;
+    margin: 3px auto;
     padding: 0;
     background-color: #f0f0f0;
     display: flex;
@@ -20,33 +20,68 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
     background-color: #fff; /* Optional: Add a background color */
     box-sizing: border-box; /* Include padding and border in the element's width */
-    overflow: hidden; /* Prevent content from overflowing */
+    overflow: scroll; /* Prevent content from overflowing */
 }
 
-.header {
-    max-width: 600px; /* Set a maximum width for the window */
-    width: 100%; 
+.content-container {
     display: flex;
+    flex-direction: column; /* Stack the header and main content vertically */
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+    width: 100%; /* Ensure it takes up the full width of the parent */
+    max-width: 1200px; /* Optional: Limit the maximum width */
+    padding: 20px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+.button-container {
+    display: block; /* Ensure it behaves as a block-level element */
+    width: 200px; /* Let the width adjust to the content */
+    height: auto; /* Let the height adjust to the content */
+    max-width: 90%; /* Set the maximum width to 90% of the viewport */
+    max-height: 90vh; /* Set the maximum height to 90% of the viewport */
+    margin: auto; /* Center the element horizontally and vertically */
+    /* padding: 20px;  */
+    box-sizing: border-box; /* Include padding and borders in width/height calculations */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.hr-separator {
+    border: 1px solid #ccc;
+    margin: 16px 0;
+}
+    
+.header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    box-sizing: border-box; /* Include padding and border in the element's width */
     align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px 20px;
+}
+
+/* Title inside the header */
+.header-title {
+    flex: 1; /* Allow the title to take up remaining space */
+    text-align: left; /* Align the title to the left */
 }
 
 .header img {
     max-width: 100px;
     height: auto;
+    flex-shrink: 0;
 }
 
 .title-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    flex: 1;
+    width: 200px;
 }
 
 .title-container h1 {
-    font-size: 1.3rem;
+    font-size: 1.0rem;
     margin: 0;
     text-align: center;
 }
@@ -65,13 +100,13 @@ form {
     background-color: #ffffff; /* Optional: Add a background color */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
     overflow: auto; /* Add scrollbars if content overflows */
+    text-align: center;
 }
 
-.section h2 {
+.section b {
     font-size: 16px;
     color: #555;
     margin-bottom: 10px;
-    text-align: center;
 }
 
 .flash-messages {
@@ -102,13 +137,17 @@ form {
     border: 1px solid #c3e6cb;
 }
 
+h3 {
+    text-align: center;
+}
+
 .button {
     display: block;
     width: 100%; /* Allow the button to resize based on text */
-    max-width: 200px; /* Remove the 200px cap */
-    padding: 10px 20px; /* Add consistent padding */
-    height: 40px;
-    margin: 6px auto;
+    max-width: 175px; /* Remove the 200px cap */
+    padding: 5px; /* Add consistent padding */
+    height: 30px;
+    margin: 3px auto;
     font-size: 14px;
     cursor: pointer;
     text-align: center;
@@ -165,6 +204,7 @@ textarea {
     border-radius: 4px;
     padding: 10px;
     font-size: 12px;
+    margin: 3px auto;
 }
 
 input {
@@ -173,7 +213,7 @@ input {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    width: 200px;
+    width: 150px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     margin: 3px auto;
@@ -191,7 +231,7 @@ select {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    width: 200px;
+    width: 150px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     margin: 3px auto;
@@ -203,7 +243,75 @@ select:focus {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.hamburger-menu {
+    position: relative; /* Ensure the menu-items are positioned relative to this container */
+}
+
+/* Hamburger Icon */
+.hamburger-icon {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+menu {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    unicode-bidi: normal;
+}
+
+/* Menu Items Overlay */
+.menu-items {
+    display: none; /* Initially hidden */
+    position: fixed; /* Position relative to the viewport */
+    background-color: #76408C; /* Semi-transparent black background */
+    z-index: 1000; /* Ensure it overlays other elements */
+    padding: 10px; /* Add padding for the menu items */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    box-shadow: 0 4px 6px #76408C; /* Add a shadow for better visibility */
+    box-sizing: border-box; /* Include padding in width/height calculations */
+}
+/* Menu Links */
+.menu-items a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white; /* White text for contrast */
+    font-size: 16px;
+    text-align: left; /* Align text to the left */
+    margin: 5px 0;
+}
+
+.menu-items a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Highlight on hover */
+}
+
+/* Media Query for Small Screens */
 @media (max-width: 700px) {
+    .menu-items {
+        top: 50px; /* Adjust position for smaller screens */
+        left: 50%; /* Position relative to the center of the viewport */
+        transform: translateX(-100%); /* Center the menu horizontally */
+        width: fit-content; /* Let the width be determined by the content */
+        max-width: 90%; /* Ensure the menu does not exceed 90% of the screen width */
+        margin: 0 auto; /* Center the menu horizontally */
+        box-sizing: border-box; /* Include padding in width calculations */
+    }
+
+    .header {
+        max-width: 100%;
+    }
+
+    .menu-items a {
+        font-size: 14px; /* Slightly smaller text for smaller screens */
+    }
+
+    .content-container {
+        max-width: 100%;;
+    }
     .window {
         grid-template-columns: 1fr;
         padding: 12px;

@@ -19,7 +19,7 @@
                 background-color: {{ color|lighten(0.8) }}; /* Light version of the student's color */
                 color: {{ color|darken(0.2) }}; /* Text color */
                 border: 1px solid {{ color|darken(0.2) }}; /* Slightly darker border */
-                padding: 10px 15px; /* Add padding for better appearance */
+                padding: 5px 10px; /* Add padding for better appearance */
                 border-radius: 5px; /* Rounded corners */
                 display: inline-block; /* Make the label look like a button */
                 cursor: pointer; /* Add a pointer cursor for better UX */
@@ -41,23 +41,80 @@
     </style>
 {% endblock %}
 
-{% block nav %}
-    <form action="/admin" method="GET" style="margin:0 8px"><button type="submit" class="button green-button">Admin</button></form>
-    <form action="/logout" method="GET" style="margin:0 8px"><button type="submit" class="button gray-button">Exit</button></form>
-    <form action="/todays-report" method="GET" style="margin:0 8px">
-        <button type="button" class="button purple-button" onclick="openRouteInNewWindow('/todays-report')">
-            Today's Report</button>
+{% block menu %}
+    <div class="hamburger-menu">
+        <!-- Hamburger Icon -->
+        <button class="hamburger-icon" onclick="toggleMenu()">
+            ☰
+        </button>
 
-        <script>
-            function openRouteInNewWindow(route) {
-                const newWindow = window.open(route, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-                if (!newWindow) {
-                    alert('Popup blocked! Please allow popups for this website.');
-                }
+        <!-- Hidden Menu -->
+        <div id="menu-items" class="menu-items">
+            <a href="/daily-report" onclick="openPopup(event, '/daily-report')">Today's Report</a>
+            <a href="/full-report" onclick="openPopup(event, '/full-report')">Full Report</a>
+            <a href="/admin" onclick="closeMenu()">Admin</a>
+            <a href="/logout" onclick="closeMenu()">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        // Toggle the visibility of the menu
+        function toggleMenu() {
+            const menu = document.getElementById('menu-items');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close the menu
+        function closeMenu() {
+            const menu = document.getElementById('menu-items');
+            menu.style.display = 'none';
+        }
+        
+        // Close the menu when clicking anywhere outside the menu
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('menu-items');
+            const hamburgerIcon = document.querySelector('.hamburger-icon');
+            if (menu.style.display === 'block' && !menu.contains(event.target) && event.target !== hamburgerIcon) {
+                menu.style.display = 'none';
             }
-        </script>
-    </form>
+        });
 
+        function openPopup(event, url) {
+            closeMenu();
+            event.preventDefault(); // Prevent default form submission behavior
+
+            // Get the selected student value
+            const studentSelect = document.getElementById('student-select');
+            const studentValue = studentSelect.value;
+
+                // if (!studentValue) {
+                //     alert('Please select a student before proceeding.');
+                //     return;
+                // }
+
+            // Append the student value to the URL as a query parameter
+            const fullUrl = `${url}?student=${encodeURIComponent(studentValue)}`;
+
+            // Open the popup window
+            const newWindow = window.open(fullUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+            if (!newWindow) {
+                alert('Popup blocked! Please allow popups for this website.');
+            }
+        }
+    </script>
+
+{% endblock %}
+{% block nav %}
+    <!-- Dropdown for selecting a student -->
+    <form action="/student-daily-report" method="GET" class="student-form">
+        <select id="student-select" name="student" required>
+            <option value="" disabled selected>Students...</option>
+            {% for student in students %}
+                <option value="{{ student }}">{{ student }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="button green-button" onclick="openPopup(event, '/student-daily-report')">View Daily</button>
+    </form>
 {% endblock %}
 
 {% block content %}
@@ -73,11 +130,10 @@
 </div>
 
 <form action="/submit" method="POST">
-<div class="window">
   <div class="main-window" role="region" aria-label="Main form">
         <!-- Students Section -->
         <div class="section">
-            <h2>Students</h2>
+            <b>Students</b>
             <div class="button-group">
                 {% for student, color in students.items() %}
                     <input type="radio" id="student-{{ student|lower }}" class="student-{{ student|lower }}" name="student" value="{{ student }}">
@@ -88,7 +144,7 @@
 
         <!-- Times Section -->
         <div class="section">
-            <h2>Times</h2>
+            <b>Times</b>
             <div class="button-group">
                 {% if times %}
                     {% for t in times %}
@@ -115,7 +171,7 @@
                 {% endif %}                    
             </div>
 
-            <h2>&nbsp;</h2>
+            <hr class="hr-separator">
             <div class="button-group">
                 {% if column1_options %}
                     {% for key, value in column2_options.items() %}
@@ -126,7 +182,7 @@
                 {% endif %}                    
             </div>
 
-            <h2>&nbsp;</h2>
+            <!-- <h2>&nbsp;</h2>
             <div class="button-group">
                 {% if column1_options %}
                     {% for key, value in column3_options.items() %}
@@ -146,13 +202,11 @@
                     <label for="column4{{ loop.index }}">{{ value }}</label>
                     {% endfor %}
                 {% endif %}                    
-            </div>
+            </div> -->
 
-            <h2>Notes</h2>
             <textarea name="notes" placeholder="Enter any additional notes here...">{{ notes }}</textarea>
         </div>
     </div>
-</div>
 </form>
 
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,77 +9,88 @@
     {% block extra_head %}{% endblock %}
     <meta name="theme-color" content="#ffffff">
     <style>
-      /* small inline helper for responsive images */
-      img.responsive { max-width:auto; height:auto; }
+        /* small inline helper for responsive images */
+        img.responsive {
+            max-width: 100px;
+            height: 100px;
+        }
     </style>
 </head>
+
 <body>
-  <header class="window header" role="banner">
-    <img src="{{ url_for('static', filename='images/thh_logo.jpg') }}" alt="THH logo" class="responsive" />
-    <div class="title-container" aria-hidden="false">
-      <h1>{% block header %}Student Activity Tracker{% endblock %}</h1>
-    </div>
-    <nav class="button-container" role="navigation" aria-label="Main actions">{% block nav %}{% endblock %}</nav>
-  </header>
+    <div class="window">
+        <div class="content-container">
+        <header class="header" role="banner">
+            <menu role="navigation" aria-label="Main Menu">{% block menu %}{% endblock %}
+            </menu>
+            <img src="{{ url_for('static', filename='images/thh_logo.jpg') }}" alt="THH logo" class="responsive" />
+            <div class="title-container" aria-hidden="false">
+                <h1>{% block header %}Student Activity Tracker{% endblock %}</h1>
+            </div>
+            {% block nav %}{% endblock %}
+        </header>
 
-    <div>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flash-messages" style="grid-column: span 4;">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+            <div class="flash-messages" style="grid-column: span 4;">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
                 </div>
+                {% endfor %}
+            </div>
             {% endif %}
-        {% endwith %}
-    </div>
+            {% endwith %}
+        </div>
 
-  <main role="main" aria-live="polite">
-    {% block content %}{% endblock %}
-  </main>
-  {% block scripts %}{% endblock %}
+        <main role="main" aria-live="polite">
+            {% block content %}{% endblock %}
+        </main>
+        {% block scripts %}{% endblock %}
 
-  <script>
-    // Open the popup
-function openDataPopup() {
-    const popup = document.getElementById('data-popup');
-    const dataContainer = document.getElementById('data-container');
+        <script>
+            // Open the popup
+            function openDataPopup() {
+                const popup = document.getElementById('data-popup');
+                const dataContainer = document.getElementById('data-container');
 
-    // Fetch the data for the current day
-    fetch('/get-todays-data')
-        .then(response => response.json())
-        .then(data => {
-            // Format the data into HTML
-            let html = '';
-            data.forEach(item => {
-                html += `
+                // Fetch the data for the current day
+                fetch('/get-todays-data')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Format the data into HTML
+                        let html = '';
+                        data.forEach(item => {
+                            html += `
                         <div class="time-period">
                             <h3>${item.time_period}</h3>
                             <p>${item.details}</p>
                         </div>
                     `;
-            });
+                        });
 
-            // Insert the formatted data into the popup
-            dataContainer.innerHTML = html;
+                        // Insert the formatted data into the popup
+                        dataContainer.innerHTML = html;
 
-            // Show the popup
-            popup.classList.remove('hidden');
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            dataContainer.innerHTML = '<p>Error loading data.</p>';
-            popup.classList.remove('hidden');
-        });
-}
+                        // Show the popup
+                        popup.classList.remove('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        dataContainer.innerHTML = '<p>Error loading data.</p>';
+                        popup.classList.remove('hidden');
+                    });
+            }
 
-// Close the popup
-function closeDataPopup() {
-    const popup = document.getElementById('data-popup');
-    popup.classList.add('hidden');
-}
-</script>
+            // Close the popup
+            function closeDataPopup() {
+                const popup = document.getElementById('data-popup');
+                popup.classList.add('hidden');
+            }
+        </script>
+    </div>
+</div>
 </body>
+
 </html>

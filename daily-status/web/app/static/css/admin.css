@@ -4,11 +4,7 @@
     gap: 20px; /* Add spacing between columns */
     align-items: start; /* Vertically align items to the top */
     margin: 10px; /* Add spacing between rows */
-}
-/* Style the <h2> header */
-.admin-window h2 {
-    margin: 0; /* Remove default margin */
-    text-align: left; /* Align text to the left */
+    text-align: center;
 }
 
 /* Style the forms */
@@ -23,9 +19,9 @@
 .admin-window select,
 .admin-window button {
     width: 100%; /* Make all elements take up the full width of their container */
-    max-width: 300px; /* Optional: Set a maximum width for better readability */
-    padding: 10px; /* Add padding for consistent height */
-    font-size: 16px; /* Ensure consistent font size */
+    max-width: 150px; /* Optional: Set a maximum width for better readability */
+    padding: 5px; /* Add padding for consistent height */
+    font-size: 14px; /* Ensure consistent font size */
     box-sizing: border-box; /* Include padding and border in the width */
 }
 
@@ -43,7 +39,7 @@ form div {
 }
 .equal-width-button {
     display: inline-block; /* Ensures the button respects width */
-    width: 200px; /* Set a fixed width for both buttons */
+    width: 150px; /* Set a fixed width for both buttons */
     text-align: center; /* Centers the text inside the button */
     align-items: center;
 }
@@ -66,61 +62,6 @@ form div {
     box-sizing: border-box; /* Include padding and border in the width */
 }
 
-.hamburger-menu {
-    position: relative; /* Ensure the menu-items are positioned relative to this container */
-}
-
-/* Hamburger Icon */
-.hamburger-icon {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-}
-
-/* Menu Items Overlay */
-.menu-items {
-    display: none; /* Initially hidden */
-    position: fixed; /* Position relative to the viewport */
-    background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent black background */
-    z-index: 1000; /* Ensure it overlays other elements */
-    padding: 10px; /* Add padding for the menu items */
-    border-radius: 4px; /* Optional: Add rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add a shadow for better visibility */
-    box-sizing: border-box; /* Include padding in width/height calculations */
-}
-/* Menu Links */
-.menu-items a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: white; /* White text for contrast */
-    font-size: 16px;
-    text-align: left; /* Align text to the left */
-    margin: 5px 0;
-}
-
-.menu-items a:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Highlight on hover */
-}
-
-/* Media Query for Small Screens */
-@media (max-width: 700px) {
-    .menu-items {
-        top: 50px; /* Adjust position for smaller screens */
-        left: 50%; /* Position relative to the center of the viewport */
-        transform: translateX(-10%); /* Center the menu horizontally */
-        width: fit-content; /* Let the width be determined by the content */
-        max-width: 90%; /* Ensure the menu does not exceed 90% of the screen width */
-        margin: 0 auto; /* Center the menu horizontally */
-        box-sizing: border-box; /* Include padding in width calculations */
-    }
-
-    .menu-items a {
-        font-size: 14px; /* Slightly smaller text for smaller screens */
-    }
-}
 @media (max-width: 700px) {
     .window {
         grid-template-columns: 1fr;

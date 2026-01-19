@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Report</title>
+    <style>
+        table {
+            width: 25%;
+            border-collapse: collapse; /* Ensures borders don't double up */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        tr {
+            border-bottom: 1px solid #ccc; /* Adds a thin line between rows */
+        }
+        tr:last-child {
+            border-bottom: none; /* Removes the border from the last row */
+        }
+        .page-break {
+            page-break-after: always; /* Add a page break after each sheet */
+        }
+    </style>
+</head>
+<body>
+    <h1>Report for {{ today }}</h1>
+    {% if sheets_data %}
+        {% for sheet_name, data in sheets_data.items() %}
+        <h2>{{ '-'.join(sheet_name.split('-')[:-1]) }}</h2>
+            {% if data %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                            <tr>
+                                <td>{{ row['Time'] }}</td>
+                                <td>{{ row['Value'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No data available for this sheet.</p>
+            {% endif %}
+            <div class="page-break"></div> <!-- Add a page break after each sheet -->
+        {% endfor %}
+    {% else %}
+        <p>No data available for today's report.</p>
+    {% endif %}
+</body>
+</html>

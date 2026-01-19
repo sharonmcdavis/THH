@@ -6,7 +6,8 @@ modular/*
 modules - 01052026/*
 web - 01092026/*
 x_modular/*
-daily-status - 12192025/*
+daily-status - 12192025/*\
+backups/*
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/

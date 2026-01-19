@@ -10,7 +10,7 @@
 
 {% block date %}<h4>{{ date }}</h4>{% endblock %}
 
-{% block nav %}
+{% block menu %}
 <div class="hamburger-menu">
     <!-- Hamburger Icon -->
     <button class="hamburger-icon" onclick="toggleMenu()">
@@ -20,7 +20,7 @@
     <!-- Hidden Menu -->
     <div id="menu-items" class="menu-items">
         <a href="/main" onclick="closeMenu()">Return</a>
-        <a href="/logout" onclick="closeMenu()">Exit</a>
+        <a href="/logout" onclick="closeMenu()">Logout</a>
         <a href="/admin/excel" onclick="closeMenu()">View Excel</a>
         <a href="/todays-report" onclick="openPopup(event, '/todays-report')">Today's Report</a>
         <a href="/admin/clear_excel" onclick="closeMenu()">Clear Excel</a>
@@ -108,7 +108,7 @@
     </div>
 
     <!-- Columns Section -->
-    {% for column in ['column1_options', 'column2_options', 'column3_options', 'column4_options'] %}
+    {% for column in ['column1_options', 'column2_options'] %}
     <div class="admin-window">
         <!-- Column Header -->
         <h2>&nbsp;</h2>

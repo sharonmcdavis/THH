@@ -6,13 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
-{% block nav %}
-    {# no nav on login page #}
+{% block header %}
+    Student Activity Tracker<br>Login
 {% endblock %}
 
 {% block content %}
-<section class="window title-container" role="region" aria-label="Login">
-    <h3>Login</h3>
+<section class="button-container" role="region" aria-label="Login">
     <form action="/" method="POST" aria-label="Site Login form">
         <!-- Username Input -->
         <div>

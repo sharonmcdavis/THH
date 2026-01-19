@@ -7,12 +7,11 @@
 {% endblock %}
 
 {% block header %}
-    Student Activity Tracker
+    Student Activity Tracker<br>Admin Functions
 {% endblock %}
 
 {% block content %}
-<section class="window title-container" role="region" aria-label="Admin login">
-    <h3>Admin Functions</h3>
+<section class="button-container" role="region" aria-label="Admin login">
     <form action="{{ url_for('admin.verify_admin') }}" method="POST" aria-label="Admin password form">
         <div>
             <input class="password-input" type="password" name="admin_password" placeholder="Enter Password" required aria-required="true">

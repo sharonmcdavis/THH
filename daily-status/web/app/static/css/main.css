@@ -5,7 +5,6 @@
     /* gap: 10px; Add spacing between columns */
     max-width: 100%; /* Ensure it does not exceed the parent container's width */
     width: 100%; /* Make it take up the full width of the parent */
-    padding: 5px; /* Add padding inside the container */
     box-sizing: border-box; /* Include padding and border in the element's width */
     overflow: hidden; /* Prevent content from overflowing */
 }
@@ -24,13 +23,13 @@
 /* Style the labels to look like buttons */
 .button-group label {
     display: inline-block;
-    padding: 10px 20px;
-    margin: 5px;
+    padding: 5px;
+    /* margin: 5px; */
     background-color: #f0f0f0;
     border-color: #888484;
     border: 1px solid #333;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
@@ -67,6 +66,13 @@
 .button-group input[name="time"] + label:hover {
     background-color: #45a049; /* Slightly darker green on hover */
     color: white;
+}
+
+/* Style for the column-options */
+.column-options {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start; /* Align content to the left */
 }
 
 textarea {
@@ -117,5 +123,43 @@ textarea {
 /* Hidden class */
 .hidden {
     display: none;
+}
+
+/* General styles for the student form */
+.student-form {
+    display: flex; /* Use flexbox for alignment */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    align-items: center; /* Align items vertically */
+}
+
+/* Styles for the select box and button */
+#student-select,
+.student-form button {
+    flex: 1; /* Make both elements take up equal space */
+    width: 100%; /* Ensure they take up the full width of their container */
+    max-width: 100px; /* Set a maximum width for larger screens */
+    height: 30px; /* Set a consistent height */
+    padding: 5px; /* Add padding for better spacing */
+    font-size: 12px; /* Ensure consistent font size */
+    border: 1px solid #ccc; /* Add a border for consistency */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Include padding and border in width/height calculations */
+}
+
+/* Select box and button styling */
+#student-select,
+.student-form button {
+    height: 30px; /* Set a consistent height */
+    padding: 5px 10px; /* Add padding for better spacing */
+    border: 1px solid #ccc; /* Add a border for consistency */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Include padding and border in width/height calculations */
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 700px) {
+    .student-form {
+        flex-direction: column; /* Stack the dropdown and button vertically */
+    }
 }
 

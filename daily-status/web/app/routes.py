@@ -68,8 +68,6 @@ def main_window():
     column4_selection = session.get('column4', '')
     notes = session.get('notes', '')
 
-    students = dict(sorted(students.items(), key=lambda item: item[0].casefold()))
-    
     """Render the main page."""
     return render_template(
         'main.html',
@@ -173,20 +171,34 @@ def logout():
     # Redirect to the index.html page
     return redirect(url_for('main.index'))    
 
-@main.route('/todays-report', methods=['GET'])
-def todays_report():
+@main.route('/full-report', methods=['GET'])
+def full_report():
     from datetime import datetime
 
     # Get today's date
     today = datetime.now().strftime('%B %d, %Y')  # Format as "Month Day, Year"
+    sheets_data = get_report_data()
 
+    # Render the data in the HTML template
+    return render_template('full_report.html', sheets_data=sheets_data, today=today)
 
+    
+@main.route('/daily-report', methods=['GET'])
+def daily_report():
+    print('get daily report')
     try:
-        # Load all sheets from the Excel file
-        excel_data = pd.read_excel(EXCEL_FILE, sheet_name=None)  # Load all sheets as a dictionary
-        sheets_data = {}    
+        # Get the current date in the format matching your Excel column headers
+        display_date = datetime.now().strftime('%B %d, %Y')
+        today = datetime.now().strftime('%d')
 
-        for sheet_name, df in excel_data.items():
+        # Read the Excel file
+        excel_data = pd.ExcelFile(EXCEL_FILE)
+        sheets_data = {}
+
+        # Loop through each sheet and filter data for the current day's column
+        for sheet_name in excel_data.sheet_names:
+            df = excel_data.parse(sheet_name)
+
             # Skip the first row of the DataFrame
             df = df.iloc[1:].reset_index(drop=True)
 
@@ -202,9 +214,138 @@ def todays_report():
             # Store the cleaned data for each sheet
             sheets_data[sheet_name] = df.to_dict(orient='records')
 
-        # Render the data in the HTML template
-        return render_template('todays_report.html', sheets_data=sheets_data, today=today)
+            # Extract the first column dynamically (starting at row 2)
+            time_column = df.iloc[1:, 0].reset_index(drop=True)  # First column, skipping the first row
+            if today in df.columns:
+                # Extract the data for the current day's column
+                today_column = df[today].iloc[1:].reset_index(drop=True)  # Skip the first row for the "today" column
 
-    except FileNotFoundError:
-        # Handle the case where the Excel file is not found
-        return render_template('todays_report.html', sheets_data={}, today=today)
+                # Combine the time column and today's column into a list of dictionaries
+                combined_data = [
+                    {'Time': time, 'Value': value}
+                    for time, value in zip(time_column, today_column)
+                ]
+
+                # Store the combined data in the sheets_data dictionary
+                sheets_data[sheet_name] = combined_data
+                print("sheets_data:", sheets_data)
+
+        # Render the data in the new template
+        return render_template('daily_report.html', sheets_data=sheets_data, today=display_date)
+
+    except Exception as e:
+        # Handle errors gracefully
+        return render_template('daily_report.html', today=display_date)
+    
+def get_report_data():
+    try:
+        # Read the Excel file
+        excel_data = pd.ExcelFile(EXCEL_FILE)
+        
+        # Initialize a dictionary to store cleaned data for all sheets
+        sheets_data = {}
+
+        # Loop through each sheet in the Excel file
+        for sheet_name in excel_data.sheet_names:
+            print(f"RD - Processing sheet: {sheet_name}")
+
+            # Parse the sheet into a DataFrame
+            df = excel_data.parse(sheet_name)
+
+            # Clean the DataFrame
+            # Remove the first row if it's a header row or unnecessary
+            df = df.iloc[1:].reset_index(drop=True)
+
+            # Strip column names of extra spaces and "Unnamed:" prefixes
+            df = df.rename(columns=lambda x: str(x).strip().replace('Unnamed:', ''))
+
+            # Replace NaN values with empty strings
+            df = df.fillna('')
+
+            # Convert numeric columns to integers where possible
+            df = df.apply(lambda col: col.map(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x))  # Convert numeric columns
+
+            # Store the cleaned data in the sheets_data dictionary
+            sheets_data[sheet_name] = df.to_dict(orient='records')
+            print(f"RD - Sheet '{sheet_name}' processed. Rows: {len(df)}")
+
+        # Return the cleaned data for all sheets
+        return sheets_data
+
+    except Exception as e:
+        print(f"An error occurred while processing the Excel file: {e}")
+        return {}
+            
+@main.route('/student-daily-report', methods=['GET'])
+def student_daily_report():
+    print("get student report")
+    try:
+        student = request.args.get('student')  # Get the selected student's name from the query parameter
+        print("student:", student)
+
+        # Get the current date in the format matching your Excel column headers
+        display_date = datetime.now().strftime('%B %d, %Y')
+        today = datetime.now().strftime('%d')
+
+        # Read the Excel file
+        excel_data = pd.ExcelFile(EXCEL_FILE)
+        sheets_data = {}
+
+        # Loop through each sheet and filter data for the current day's column
+        for sheet_name in excel_data.sheet_names:
+            # print("**parsed: ", sheet_name.split('-')[:-1])
+            parsed = sheet_name.split('-')[:-1]
+
+            student_name = '-'.join(parsed).strip()  # Join the name parts with a space and strip whitespace
+            print("parsed student: ", student_name)
+            df = excel_data.parse(sheet_name)
+
+            if student:
+                print("in student: ", df)
+                print("student: ", student)
+                print("student_name: ", student_name)
+                print(f"check: {student.strip().lower() == student_name.lower()}")
+
+                # Compare the student parameter with the first cell (A1)
+                if student and student.strip().lower() != student_name.strip().lower():
+                    print(f"Skipping sheet '{sheet_name}' as A1 does not match the student parameter.")
+                    continue
+                else:
+                    print("not skipping")
+
+            # Skip the first row of the DataFrame
+            df = df.iloc[1:].reset_index(drop=True)
+
+            # Remove the word "Unnamed:" from column names
+            df = df.rename(columns=lambda x: str(x).replace('Unnamed:', '').strip())
+
+            # Replace NaN values with empty strings
+            df = df.fillna('')
+
+            # Convert numeric columns to integers where possible
+            df = df.applymap(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x)
+
+            # Store the cleaned data for each sheet
+            sheets_data[sheet_name] = df.to_dict(orient='records')
+
+            # Extract the first column dynamically (starting at row 2)
+            time_column = df.iloc[1:, 0].reset_index(drop=True)  # First column, skipping the first row
+            if today in df.columns:
+                # Extract the data for the current day's column
+                today_column = df[today].iloc[1:].reset_index(drop=True)  # Skip the first row for the "today" column
+
+                # Combine the time column and today's column into a list of dictionaries
+                combined_data = [
+                    {'Time': time, 'Value': value}
+                    for time, value in zip(time_column, today_column)
+                ]
+
+                # Store the combined data in the sheets_data dictionary
+                sheets_data[sheet_name] = combined_data
+                print("sheets_data:", sheets_data)
+        return render_template('daily_report.html', sheets_data=sheets_data, today=display_date)
+
+    except Exception as e:
+        # flash(f"An error occurred while processing the Excel file: {str(e)}", 500  )
+        print(f'An error occurred while processing the Excel file: {e}')
+        return render_template('daily_report.html', today=display_date)

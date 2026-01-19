@@ -28,7 +28,6 @@ def initialize_data():
             column3_options = data.get("column3_options", {})  # Load as a dictionary
             column4_options = data.get("column4_options", {})  # Load as a dictionary
             colors = data.get("colors", {})
-        students = dict(sorted(students.items(), key=lambda x: x[0], reverse=False))
 
     except FileNotFoundError:
         print(f"{DATA_FILE} not found. Using default values.")
