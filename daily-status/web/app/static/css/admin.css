@@ -11,23 +11,16 @@
 .admin-window form {
     display: flex;
     flex-direction: column; /* Stack inputs and buttons vertically */
-    gap: 10px; /* Add spacing between inputs and buttons */
 }
 
 /* Style for input boxes, select boxes, and buttons */
 .admin-window input[type="text"],
 .admin-window select,
 .admin-window button {
-    width: 100%; /* Make all elements take up the full width of their container */
     max-width: 150px; /* Optional: Set a maximum width for better readability */
     padding: 5px; /* Add padding for consistent height */
     font-size: 14px; /* Ensure consistent font size */
     box-sizing: border-box; /* Include padding and border in the width */
-}
-
-/* Optional: Add spacing between elements */
-.admin-window form > * {
-    margin-bottom: 10px; /* Add spacing between form elements */
 }
 
 form div {
@@ -56,10 +49,74 @@ form div {
 
 #admin-actions {
     width: 100%; /* Make all elements take up the full width of their container */
-    max-width: 300px; /* Optional: Set a maximum width for better readability */
+    max-width: 400px; /* Optional: Set a maximum width for better readability */
     padding: 10px; /* Add padding for consistent height */
     font-size: 16px; /* Ensure consistent font size */
     box-sizing: border-box; /* Include padding and border in the width */
+}
+
+.student-select-container {
+    grid-column: 1 / -1; /* Make the header span all columns */
+    text-align: center; /* Center the text horizontally */
+    font-size: 14px; /* Optional: Increase the font size */
+    font-weight: bold; /* Optional: Make the text bold */
+}
+
+.student-header {
+    text-align: left; /* Align the header text to the left */
+    font-size: 14px; /* Increase the font size for the header */
+    font-weight: bold; /* Make the header bold */
+}
+
+.student-content {
+    display: flex;
+    flex-direction: flex-start; /* Stack the student list and add student form vertically */
+    gap: 15px; /* Add spacing between the student list and the add student form */
+}
+
+.student-list {
+    flex-grow: 1; /* Allow the student list to take up available space */
+    max-height: 300px; /* Set a maximum height for the list */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Add a border around the list */
+    border-radius: 5px; /* Add rounded corners */
+    background-color: #fff; /* White background for the list */
+    padding: 10px; /* Add padding inside the list */
+}
+
+form[action="/admin/add_student"] {
+    display: flex; /* Use flexbox for the form layout */
+    flex-direction: column; /* Stack the input and button vertically */
+    align-items: flex-start; /* Align the form to the top */
+    justify-content: start;
+}
+
+.student-item {
+    display: flex; /* Align the student name and button horizontally */
+    justify-content: space-between; /* Space out the name and button */
+    align-items: center; /* Vertically align items */
+    background-color: #fff; /* White background for each item */
+    border: 1px solid #ccc; /* Add a border around each item */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: grab; /* Show a grab cursor for draggable items */
+    padding: 5px;
+}
+
+.student-item span {
+    flex-grow: 1; /* Allow the student name to take up available space */
+    margin-right: 10px; /* Add space between the student name and the button */
+}
+
+.student-item:active {
+    cursor: grabbing; /* Show a grabbing cursor when dragging */
+    background-color: #b9ebb9; /* Highlight the item being dragged */
+    color: #333;
+}
+
+.remove-student-button {
+    width: 65px; /* Set a fixed width for all remove buttons */
+    text-align: center; /* Center the text inside the button */
+    font-size: 14px;;
 }
 
 @media (max-width: 700px) {
@@ -69,3 +126,4 @@ form div {
         margin: 12px;
     }
 }
+

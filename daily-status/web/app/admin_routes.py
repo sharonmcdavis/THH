@@ -1,6 +1,6 @@
 from datetime import datetime
 from tkinter import messagebox
-from flask import Blueprint, render_template, request, redirect, session, url_for, flash, send_file
+from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
 from .data_storage import save_data, update_data, EXCEL_FILE
 from .data_loader import load_data_from_file
@@ -248,3 +248,42 @@ def clear_excel():
         flash(f"Error renaming Excel file: {str(e)}", "error")
 
     return load_admin_page()
+
+@admin.route('/reorder_students', methods=['POST'])
+def reorder_students():
+    from .data_storage import students
+    """Reorder a student."""
+    reordered_students = request.form.get('reordered_students')
+    print("reordered: ", reordered_students)
+    print("students: ", students)
+    if reordered_students:
+        # Parse the reordered_students JSON string into a Python list
+        reordered_students = json.loads(reordered_students)
+        print("reordered_students: ", reordered_students)
+
+        # Create a new dictionary with the updated order
+        updated_students = {student: students[student] for student in reordered_students if student in students}
+        print("updated_students: ", updated_students)
+
+        # Update the students dictionary
+        students.clear()
+        students.update(updated_students)
+
+        # Save the updated dictionary
+        save_data()
+
+        flash(f"Students reordered successfully!", "success")
+    else:
+        flash("Student reorder failed.", "error")
+
+    return load_admin_page()
+
+        #     reordered_students = json.loads(reordered_students)
+
+        #     # Save the reordered list to your database or file
+        #     with open('app/student_order.json', 'w') as f:
+        #         json.dump(reordered_students, f)
+
+        #     return jsonify({'success': True, 'message': 'Student order updated successfully!'}), 200
+        # else:
+        #     return jsonify({'success': False, 'message': 'No data received!'}), 400

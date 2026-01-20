@@ -1,6 +1,6 @@
 import os
 import shutil
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, json, jsonify, render_template, request, redirect, url_for, flash, session
 from datetime import datetime
 from .data_storage import initialize_data, write_to_excel
 from .utils import login_required, WEB_PASSWORD, EXCEL_FILE, BACKUP_FOLDER
@@ -349,3 +349,4 @@ def student_daily_report():
         # flash(f"An error occurred while processing the Excel file: {str(e)}", 500  )
         print(f'An error occurred while processing the Excel file: {e}')
         return render_template('daily_report.html', today=display_date)
+    

@@ -59,17 +59,153 @@
         }
     }
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const studentList = document.getElementById('student-list');
+        const reorderedStudentsInput = document.getElementById('reordered-students');
+
+        let draggedItem = null;
+
+        // Add event listeners to all student items
+        studentList.addEventListener('dragstart', (e) => {
+            if (e.target && e.target.classList.contains('student-item')) {
+                draggedItem = e.target;
+                e.target.style.opacity = '0.5'; // Make the dragged item semi-transparent
+                e.dataTransfer.effectAllowed = 'move'; // Set the drag effect
+            }
+        });
+
+        studentList.addEventListener('dragend', (e) => {
+            if (e.target && e.target.classList.contains('student-item')) {
+                e.target.style.opacity = ''; // Reset the opacity
+                draggedItem = null; // Clear the dragged item
+            }
+        });
+
+        studentList.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Allow dropping
+            e.dataTransfer.dropEffect = 'move'; // Set the drop effect
+            const target = e.target;
+            if (target && target !== draggedItem && target.classList.contains('student-item')) {
+                const bounding = target.getBoundingClientRect();
+                const offset = e.clientY - bounding.top;
+                if (offset > bounding.height / 2) {
+                    target.parentNode.insertBefore(draggedItem, target.nextSibling);
+                } else {
+                    target.parentNode.insertBefore(draggedItem, target);
+                }
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('reorder-form').addEventListener('submit', (e) => {
+            const reorderedStudents = Array.from(studentList.children).map(item => item.dataset.student);
+            reorderedStudentsInput.value = JSON.stringify(reorderedStudents); // Save the new order in the hidden input
+        });
+    });
+</script> 
+    
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const studentList = document.getElementById('student-list');
+        const removeForm = document.createElement('form');
+        removeForm.method = 'POST';
+        removeForm.action = '/admin/remove_student';
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'student';
+        removeForm.appendChild(hiddenInput);
+        document.body.appendChild(removeForm);
+
+        // Add event listener for remove buttons
+        studentList.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('remove-student-button')) {
+                const student = e.target.dataset.student;
+                if (confirm(`Are you sure you want to remove ${student}?`)) {
+                    hiddenInput.value = student; // Set the student name in the hidden input
+                    removeForm.submit(); // Submit the form
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% block content %}
 <div class="window" role="region" aria-label="Admin panels">
     <!-- Students Section -->
     <div class="admin-window">
-        <h2>Students</h2>
-        <form action="/admin/add_student" method="POST">
+        <div class="student-select-container">
+            <!-- Header Row -->
+            <div class="student-header">
+                <b>Students</b>
+            </div>
+        
+            <!-- Content Row -->
+            <div class="student-content">
+                <form action="/admin/reorder_students" method="POST" id="reorder-form">
+                    <ul id="student-list" class="student-list">
+                        {% for student in data['students'] %}
+                            <li class="student-item" draggable="true" data-student="{{ student }}">
+                                <span>{{ student }}</span>
+                                <button type="button" class="button purple-button remove-student-button" data-student="{{ student }}">Remove</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="reordered_students" id="reordered-students">
+                    <button type="submit" class="button green-button">Save Order</button>
+                </form>
+        
+                <!-- Add Student Form -->
+                <form action="/admin/add_student" method="POST">
+                    <input type="text" name="student" placeholder="Enter student name" required>
+
+                    <select name="color" required>
+                        <option value="" disabled selected>Select a color</option>
+                        {% for color_name, color_value in available_colors.items() %}
+                        <option value="{{ color_value }}">{{ color_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="button green-button">Add</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- <b>Students</b>
+        <div class="student-select-container">
+            <form action="/admin/reorder_students" method="POST" id="reorder-form">
+                <ul id="student-list" class="student-list">
+                    {% for student in data['students'] %}
+                        <li class="student-item" draggable="true" data-student="{{ student }}">
+                            <span>{{ student }}</span>
+                            <button type="button" class="button purple-button" data-student="{{ student }}">Remove</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="hidden" name="reordered_students" id="reordered-students">
+                <button type="submit" class="button green-button">Save Order</button>
+            </form>
+            <form action="/admin/remove_student" method="POST" id="remove-form">
+                <input type="hidden" name="student_to_remove" id="student-to-remove">
+            </form>
+        </div> -->
+        <!-- <div class="student-select-container">
+            <form action="/admin/reorder_students" method="POST" id="reorder-form">
+                <ul id="student-list" class="student-list">
+                    {% for student in data['students'] %}
+                        <li class="student-item" draggable="true" data-student="{{ student }}">
+                            {{ student }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="hidden" name="reordered_students" id="reordered-students">
+                <button type="submit" class="button green-button">Save Order</button>
+            </form>
+        </div> -->
+        <!-- <form action="/admin/add_student" method="POST">
             <input type="text" name="student" placeholder="Enter student name" required>
 
-            <!-- Dropdown for Available Colors -->
             <select name="color" required>
                 <option value="" disabled selected>Select a color</option>
                 {% for color_name, color_value in available_colors.items() %}
@@ -77,8 +213,8 @@
                 {% endfor %}
             </select>
             <button type="submit" class="button green-button">Add</button>
-        </form>
-        <form action="/admin/remove_student" method="POST" class="form-row">
+        </form> -->
+        <!-- <form action="/admin/remove_student" method="POST" class="form-row">
             <select name="student" required>
                 <option value="Select a Student...">Select a Student...</option>
                 {% for student in data['students'] %}
@@ -86,7 +222,9 @@
                 {% endfor %}
             </select>
             <button type="submit" class="button purple-button">Remove</button>
-        </form>
+        </form> -->
+
+
         <hr class="form-separator">
 
         <!-- Times Section -->
