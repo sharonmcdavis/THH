@@ -22,7 +22,7 @@
         <a href="/main" onclick="closeMenu()">Return</a>
         <a href="/logout" onclick="closeMenu()">Logout</a>
         <a href="/admin/excel" onclick="closeMenu()">View Excel</a>
-        <a href="/todays-report" onclick="openPopup(event, '/todays-report')">Today's Report</a>
+        <a href="/daily-report" onclick="openPopup(event, '/daily-report')">Today's Report</a>
         <a href="/admin/clear_excel" onclick="closeMenu()">Clear Excel</a>
     </div>
 </div>
@@ -98,7 +98,7 @@
         });
 
         // Handle form submission
-        document.getElementById('reorder-form').addEventListener('submit', (e) => {
+        document.getElementById('student-reorder-form').addEventListener('submit', (e) => {
             const reorderedStudents = Array.from(studentList.children).map(item => item.dataset.student);
             reorderedStudentsInput.value = JSON.stringify(reorderedStudents); // Save the new order in the hidden input
         });
@@ -129,6 +129,96 @@
         });
     });
 </script>
+
+<!--  -->
+<!--  -->
+<!--  -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timeList = document.getElementById('time-list');
+        const reorderedTimesInput = document.getElementById('reordered-times');
+
+        let draggedItem = null;
+
+        // Add event listeners to all time items
+        timeList.addEventListener('dragstart', (e) => {
+            if (e.target && e.target.classList.contains('time-item')) {
+                draggedItem = e.target;
+                e.target.style.opacity = '0.5'; // Make the dragged item semi-transparent
+                e.dataTransfer.effectAllowed = 'move'; // Set the drag effect
+            }
+        });
+
+        timeList.addEventListener('dragend', (e) => {
+            if (e.target && e.target.classList.contains('time-item')) {
+                e.target.style.opacity = ''; // Reset the opacity
+                draggedItem = null; // Clear the dragged item
+            }
+        });
+
+        timeList.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Allow dropping
+            e.dataTransfer.dropEffect = 'move'; // Set the drop effect
+            const target = e.target;
+            if (target && target !== draggedItem && target.classList.contains('time-item')) {
+                const bounding = target.getBoundingClientRect();
+                const offset = e.clientY - bounding.top;
+                if (offset > bounding.height / 2) {
+                    target.parentNode.insertBefore(draggedItem, target.nextSibling);
+                } else {
+                    target.parentNode.insertBefore(draggedItem, target);
+                }
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('time-reorder-form').addEventListener('submit', (e) => {
+            const reorderedTimes = Array.from(timeList.children).map(item => item.dataset.time);
+            reorderedTimesInput.value = JSON.stringify(reorderedTimes); // Save the new order in the hidden input
+        });
+    });
+</script> 
+    
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timeList = document.getElementById('time-list');
+        const removeForm = document.createElement('form');
+        removeForm.method = 'POST';
+        removeForm.action = '/admin/remove_time';
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'time';
+        removeForm.appendChild(hiddenInput);
+        document.body.appendChild(removeForm);
+
+        // Add event listener for remove buttons
+        timeList.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('remove-time-button')) {
+                const time = e.target.dataset.time;
+                if (confirm(`Are you sure you want to remove ${time}?`)) {
+                    hiddenInput.value = time; // Set the time name in the hidden input
+                    removeForm.submit(); // Submit the form
+                }
+            }
+        });
+    });
+</script>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timeList = document.getElementById('time-list');
+        const reorderedTimesInput = document.getElementById('reordered-times');
+        const reorderTimesForm = document.getElementById('reorder-times-form');
+
+        // Handle form submission
+        reorderTimesForm.addEventListener('submit', (e) => {
+            const reorderedTimes = Array.from(timeList.children).map(item => item.dataset.value);
+            console.log('Reordered Times:', reorderedTimes); // Debugging output
+            reorderedTimesInput.value = JSON.stringify(reorderedTimes); // Save the new order in the hidden input
+        });
+    });
+</script> -->
 {% endblock %}
 
 {% block content %}
@@ -171,108 +261,57 @@
             </div>
         </div>
 
-
-        <!-- <b>Students</b>
-        <div class="student-select-container">
-            <form action="/admin/reorder_students" method="POST" id="reorder-form">
-                <ul id="student-list" class="student-list">
-                    {% for student in data['students'] %}
-                        <li class="student-item" draggable="true" data-student="{{ student }}">
-                            <span>{{ student }}</span>
-                            <button type="button" class="button purple-button" data-student="{{ student }}">Remove</button>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <input type="hidden" name="reordered_students" id="reordered-students">
-                <button type="submit" class="button green-button">Save Order</button>
-            </form>
-            <form action="/admin/remove_student" method="POST" id="remove-form">
-                <input type="hidden" name="student_to_remove" id="student-to-remove">
-            </form>
-        </div> -->
-        <!-- <div class="student-select-container">
-            <form action="/admin/reorder_students" method="POST" id="reorder-form">
-                <ul id="student-list" class="student-list">
-                    {% for student in data['students'] %}
-                        <li class="student-item" draggable="true" data-student="{{ student }}">
-                            {{ student }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <input type="hidden" name="reordered_students" id="reordered-students">
-                <button type="submit" class="button green-button">Save Order</button>
-            </form>
-        </div> -->
-        <!-- <form action="/admin/add_student" method="POST">
-            <input type="text" name="student" placeholder="Enter student name" required>
-
-            <select name="color" required>
-                <option value="" disabled selected>Select a color</option>
-                {% for color_name, color_value in available_colors.items() %}
-                <option value="{{ color_value }}">{{ color_name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="button green-button">Add</button>
-        </form> -->
-        <!-- <form action="/admin/remove_student" method="POST" class="form-row">
-            <select name="student" required>
-                <option value="Select a Student...">Select a Student...</option>
-                {% for student in data['students'] %}
-                <option value="{{ student }}">{{ student }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="button purple-button">Remove</button>
-        </form> -->
-
-
         <hr class="form-separator">
-
-        <!-- Times Section -->
-        <h2>Times</h2>
-        <form action="/admin/add_time" method="POST">
-            <input type="text" name="time" placeholder="Enter time" required>
-            <button type="submit" class="button green-button">Add</button>
-        </form>
-        <form action="/admin/remove_time" method="POST" class="form-row">
-            <select name="time" required>
-                <option value="Select a time...">Select a time...</option>
-                {% for time in data['times'] %}
-                <option value="{{ time }}">{{ time }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="button purple-button">Remove</button>
-        </form>
+        <div class="time-select-container">
+            <div class="time-header">
+                <b>Times</b>
+            </div>
+            <div class="time-content">
+                <form action="/admin/reorder_times" method="POST" id="time-reorder-form">
+                    <ul id="time-list" class="time-list">
+                        {% for time in data['times'] %}
+                            <li class="time-item" draggable="true" data-time="{{ time }}">
+                                <span>{{ time }}</span>
+                                <button type="button" class="button purple-button remove-time-button" data-time="{{ time }}">Remove</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="reordered_times" id="reordered-times">
+                    <button type="submit" class="button green-button">Save Order</button>
+                </form>
+                <!-- Add Time Form -->
+                <form action="/admin/add_time" method="POST">
+                    <input type="text" name="time" placeholder="Enter time" required>
+                    <button type="submit" class="button green-button">Add</button>
+                </form>
+            </div>
+        </div>
         <hr class="form-separator">
     </div>
 
     <!-- Columns Section -->
     {% for column in ['column1_options', 'column2_options'] %}
-    <div class="admin-window">
-        <!-- Column Header -->
-        <h2>&nbsp;</h2>
+        <div class="in-a-row">
+            <!-- Add Form -->
+            <form action="/admin/add_column" method="POST">
+                <input type="hidden" name="column_name" value="{{ column }}">
+                <input type="text" name="key" placeholder="Enter key..." required>
+                <input type="text" name="value" placeholder="Enter value..." required>
+                <button type="submit" class="button green-button">Add</button>
+            </form>
 
-        <!-- Add Form -->
-        <form action="/admin/add_column" method="POST">
-            <input type="hidden" name="column_name" value="{{ column }}">
-            <input type="text" name="key" placeholder="Enter key..." required>
-            <input type="text" name="value" placeholder="Enter value..." required>
-            <button type="submit" class="button green-button">Add</button>
-        </form>
-
-        <!-- Remove Form -->
-        <form action="/admin/remove_column" method="POST">
-            <select name="{{ column }}" required>
-                <option value="Select an Option...">Select an Option...</option>
-                {% for key, value in data[column].items() %}
-                <option value="{{ key }}">{{ value }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="button purple-button">Remove</button>
-        </form>
-        
-        <hr class="form-separator">
-    </div>
+            <!-- Remove Form -->
+            <form action="/admin/remove_column" method="POST">
+                <select name="{{ column }}" required>
+                    <option value="Select an Option...">Select an Option...</option>
+                    {% for key, value in data[column].items() %}
+                    <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button purple-button">Remove</button>
+            </form>
+            </div>
+            <hr class="form-separator">
     {% endfor %}
-</div>
 </div>
 {% endblock %}

@@ -68,6 +68,10 @@ def main_window():
     column4_selection = session.get('column4', '')
     notes = session.get('notes', '')
 
+    if (not time):
+        time = datetime.now().strftime('%I:%M')  # Format: HH:MM AM/PM
+        print("Current Time:", time)
+
     """Render the main page."""
     return render_template(
         'main.html',

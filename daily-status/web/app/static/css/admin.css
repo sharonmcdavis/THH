@@ -1,7 +1,6 @@
 .admin-window {
     display: grid; /* Use CSS Grid for layout */
     grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
-    gap: 20px; /* Add spacing between columns */
     align-items: start; /* Vertically align items to the top */
     margin: 10px; /* Add spacing between rows */
     text-align: center;
@@ -30,6 +29,16 @@ form div {
     justify-content: center; /* Vertically center the buttons */
     gap: 10px; /* Add spacing between the input and button */
 }
+
+.in-a-row {
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: row; /* Stack elements vertically */
+    align-items: start; /* Horizontally center the buttons */
+    justify-content: center; /* Vertically center the buttons */
+    gap: 10px; /* Add spacing between the input and button */
+    width: 400px;
+}
+
 .equal-width-button {
     display: inline-block; /* Ensures the button respects width */
     width: 150px; /* Set a fixed width for both buttons */
@@ -60,11 +69,12 @@ form div {
     text-align: center; /* Center the text horizontally */
     font-size: 14px; /* Optional: Increase the font size */
     font-weight: bold; /* Optional: Make the text bold */
+    padding: 10px;
 }
 
 .student-header {
-    text-align: left; /* Align the header text to the left */
-    font-size: 14px; /* Increase the font size for the header */
+    text-align: center; /* Align the header text to the left */
+    font-size: 18px; /* Increase the font size for the header */
     font-weight: bold; /* Make the header bold */
 }
 
@@ -82,6 +92,7 @@ form div {
     border-radius: 5px; /* Add rounded corners */
     background-color: #fff; /* White background for the list */
     padding: 10px; /* Add padding inside the list */
+    width: 175px;
 }
 
 form[action="/admin/add_student"] {
@@ -89,6 +100,7 @@ form[action="/admin/add_student"] {
     flex-direction: column; /* Stack the input and button vertically */
     align-items: flex-start; /* Align the form to the top */
     justify-content: start;
+    padding-top: 20px;
 }
 
 .student-item {
@@ -119,11 +131,79 @@ form[action="/admin/add_student"] {
     font-size: 14px;;
 }
 
+.time-select-container {
+    grid-column: 1 / -1; /* Make the header span all columns */
+    text-align: center; /* Center the text horizontally */
+    font-size: 14px; /* Optional: Increase the font size */
+    font-weight: bold; /* Optional: Make the text bold */
+    padding: 10px;
+}
+
+.time-header {
+    text-align: center; /* Align the header text to the left */
+    font-size: 18px; /* Increase the font size for the header */
+    font-weight: bold; /* Make the header bold */
+}
+
+.time-content {
+    display: flex;
+    flex-direction: flex-start; /* Stack the student list and add student form vertically */
+    gap: 15px; /* Add spacing between the student list and the add student form */
+}
+
+.time-list {
+    flex-grow: 1; /* Allow the student list to take up available space */
+    max-height: 300px; /* Set a maximum height for the list */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Add a border around the list */
+    border-radius: 5px; /* Add rounded corners */
+    background-color: #fff; /* White background for the list */
+    padding: 10px; /* Add padding inside the list */
+    width: 175px;
+}
+
+form[action="/admin/add_time"] {
+    display: flex; /* Use flexbox for the form layout */
+    flex-direction: column; /* Stack the input and button vertically */
+    align-items: flex-start; /* Align the form to the top */
+    justify-content: start;
+    padding-top: 30px;
+}
+
+.time-item {
+    display: flex; /* Align the student name and button horizontally */
+    justify-content: space-between; /* Space out the name and button */
+    align-items: center; /* Vertically align items */
+    background-color: #fff; /* White background for each item */
+    border: 1px solid #ccc; /* Add a border around each item */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: grab; /* Show a grab cursor for draggable items */
+    padding: 5px;
+}
+
+.time-item span {
+    flex-grow: 1; /* Allow the student name to take up available space */
+    margin-right: 10px; /* Add space between the student name and the button */
+}
+
+.time-item:active {
+    cursor: grabbing; /* Show a grabbing cursor when dragging */
+    background-color: #b9ebb9; /* Highlight the item being dragged */
+    color: #333;
+}
+
+.remove-time-button {
+    width: 65px; /* Set a fixed width for all remove buttons */
+    text-align: center; /* Center the text inside the button */
+    font-size: 14px;;
+}
+
 @media (max-width: 700px) {
     .window {
         grid-template-columns: 1fr;
         padding: 12px;
         margin: 12px;
+        max-width: 100%;
     }
 }
 

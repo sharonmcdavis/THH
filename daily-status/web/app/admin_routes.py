@@ -278,12 +278,25 @@ def reorder_students():
 
     return load_admin_page()
 
-        #     reordered_students = json.loads(reordered_students)
+@admin.route('/reorder_times', methods=['POST'])
+def reorder_times():
+    from .data_storage import times
+    """Reorder a time."""
+    reordered_times = request.form.get('reordered_times')
+    print("reordered: ", reordered_times)
+    print("times: ", times)
+    if reordered_times:
+        # Parse the reordered_students JSON string into a Python list
+        reordered_times = json.loads(reordered_times)
+        print("reordered_times: ", reordered_times)
+        times.clear()
+        times.extend(reordered_times)  # Update the times list with the new order
 
-        #     # Save the reordered list to your database or file
-        #     with open('app/student_order.json', 'w') as f:
-        #         json.dump(reordered_students, f)
+        
+        # Save the updated dictionary
+        save_data()
+        flash(f"Times reordered successfully!", "success")
+    else:
+        flash("Time reorder failed.", "error")
 
-        #     return jsonify({'success': True, 'message': 'Student order updated successfully!'}), 200
-        # else:
-        #     return jsonify({'success': False, 'message': 'No data received!'}), 400
+    return load_admin_page()

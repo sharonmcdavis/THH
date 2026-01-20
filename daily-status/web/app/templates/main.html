@@ -103,6 +103,36 @@
         }
     </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentTime = "{{ time }}"; // Current time passed from the server
+        const [currentHours, currentMinutes] = currentTime.split(':').map(Number);
+        const currentTotalMinutes = currentHours * 60 + currentMinutes; // Convert current time to minutes since midnight
+
+        const timeOptions = document.querySelectorAll('input[name="time"]');
+
+        let closestTime = null;
+        let closestDifference = Infinity;
+
+        timeOptions.forEach(option => {
+            const [hours, minutes] = option.value.split(':').map(Number);
+            const optionMinutes = hours * 60 + minutes; // Convert option time to minutes since midnight
+            const difference = Math.abs(optionMinutes - currentTotalMinutes);
+
+            console.log('Option Value:', option.value, 'Option Minutes:', optionMinutes, 'Difference:', difference);
+
+            if (difference < closestDifference) {
+                closestTime = option;
+                closestDifference = difference;
+            }
+        });
+
+        if (closestTime) {
+            closestTime.checked = true; // Check the closest time radio button
+            console.log('Closest Time Selected:', closestTime.value);
+        }
+    });
+</script>
 {% endblock %}
 {% block nav %}
     <!-- Dropdown for selecting a student -->
