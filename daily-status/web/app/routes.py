@@ -1,7 +1,9 @@
 import os
 import shutil
+from zoneinfo import ZoneInfo
 from flask import Blueprint, json, jsonify, render_template, request, redirect, url_for, flash, session
 from datetime import datetime
+
 from .data_storage import initialize_data, write_to_excel
 from .utils import login_required, WEB_PASSWORD, EXCEL_FILE, BACKUP_FOLDER
 import pandas as pd
@@ -69,7 +71,16 @@ def main_window():
     notes = session.get('notes', '')
 
     if (not time):
-        time = datetime.now().strftime('%I:%M')  # Format: HH:MM AM/PM
+        # Get the current time in UTC
+        utc_now = datetime.now(ZoneInfo("UTC"))
+
+        # Convert UTC time to CST
+        cst_now = utc_now.astimezone(ZoneInfo("America/Chicago"))
+
+        # Format the time in 12-hour format with AM/PM
+        time = cst_now.strftime('%I:%M')  # Example: "10:05 PM"
+
+
         print("Current Time:", time)
 
     """Render the main page."""
