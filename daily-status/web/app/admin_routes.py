@@ -1,12 +1,14 @@
 from datetime import datetime
+import shutil
 from tkinter import messagebox
 from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
-from .data_storage import save_data, update_data, EXCEL_FILE
+from .data_storage import save_data, update_data, apply_alternate_shading
 from .data_loader import load_data_from_file
-from .utils import login_required, ADMIN_PASSWORD, admin_login_required
+from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, admin_login_required
 import os
 from reportlab.lib.pagesizes import letter
+import openpyxl
 
 admin = Blueprint('admin', __name__)
 
@@ -295,8 +297,77 @@ def reorder_times():
         
         # Save the updated dictionary
         save_data()
+        reorder_excel(times)
         flash(f"Times reordered successfully!", "success")
     else:
         flash("Time reorder failed.", "error")
 
     return load_admin_page()
+
+def reorder_excel(times):
+    try:
+        # backup excel just in case
+        backup_excel()
+
+        # Load the Excel workbook
+        wb = openpyxl.load_workbook(EXCEL_FILE)
+
+        # Iterate through all sheets in the workbook
+        for sheet_name in wb.sheetnames:
+            sheet = wb[sheet_name]
+
+            # Read the rows starting from row 3 (A3)
+            rows = list(sheet.iter_rows(min_row=3, max_col=sheet.max_column, values_only=True))
+
+            # Extract the header row (if any) and the data rows
+            header = [cell.value for cell in sheet[2]]  # Row 2 is the header
+            data = rows
+
+            # Create a dictionary to map times to their corresponding rows
+            time_to_row = {row[0]: row for row in data if row[0] in times}
+
+            # Reorder the rows based on the `times` list
+            reordered_data = [time_to_row[time] for time in times if time in time_to_row]
+
+            # Clear the existing rows starting from row 3
+            for row in sheet.iter_rows(min_row=3, max_row=sheet.max_row):
+                for cell in row:
+                    cell.value = None
+
+            # Write the reordered data back to the sheet
+            for i, row in enumerate(reordered_data, start=3):
+                for j, value in enumerate(row, start=1):
+                    sheet.cell(row=i, column=j, value=value)
+
+            # Write the header back to row 2
+            for col, value in enumerate(header, start=1):
+                sheet.cell(row=2, column=col, value=value)
+            apply_alternate_shading(sheet)
+
+        # Save the workbook
+        wb.save(EXCEL_FILE)
+        print(f"Excel file successfully reordered and saved to {EXCEL_FILE}")
+    except Exception as e:
+        print(f"Error updating {EXCEL_FILE}: {e}")
+
+def backup_excel():
+    try:
+        # Get the current datetime stamp
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+        # Extract the directory and file name
+        directory, file_name = os.path.split(EXCEL_FILE)
+        file_name_without_ext, file_ext = os.path.splitext(file_name)
+
+        # Create the new file name with the timestamp
+        new_file_name = f"{file_name_without_ext}_{timestamp}{file_ext}"
+        new_file_path = os.path.join(directory, ARCHIVE_FOLDER, new_file_name)
+
+        # Rename the file
+        shutil.copy(EXCEL_FILE, new_file_path)
+
+    except Exception as e:
+        # Flash an error message if something goes wrong
+        flash(f"Error renaming Excel file: {str(e)}", "error")
+
+    return load_admin_page()        

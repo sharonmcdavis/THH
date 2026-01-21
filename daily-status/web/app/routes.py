@@ -5,6 +5,7 @@ from flask import Blueprint, json, jsonify, render_template, request, redirect, 
 from datetime import datetime
 
 from .data_storage import initialize_data, write_to_excel
+from .data_loader import load_data_from_file 
 from .utils import login_required, WEB_PASSWORD, EXCEL_FILE, BACKUP_FOLDER
 import pandas as pd
 
@@ -57,7 +58,7 @@ def create_backup():
 @main.route('/main')
 @login_required
 def main_window():
-    from .data_storage import students, times, column1_options, column2_options, column3_options, column4_options
+    data = load_data_from_file()
     # Get the current date and format it
     current_date = datetime.now().strftime("%B %d, %Y")  # Example: "January 8, 2026"
 
@@ -86,12 +87,12 @@ def main_window():
     """Render the main page."""
     return render_template(
         'main.html',
-        students=students,
-        times=times,
-        column1_options=column1_options,
-        column2_options=column2_options,
-        column3_options=column3_options,
-        column4_options=column4_options,
+        students=data['students'],
+        times=data['times'],
+        column1_options=data['column1_options'],
+        column2_options=data['column2_options'],
+        column3_options=data['column3_options'],
+        column4_options=data['column4_options'],
         student=student,
         time=time,
         column1=column1_selection,

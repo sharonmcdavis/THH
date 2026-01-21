@@ -68,7 +68,6 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 
 def apply_alternate_shading(sheet):
-    print("...in apply_alternate_shading")
     """Apply alternate shading to every 5 columns in the Excel sheet."""
     # Define fill colors for shading
     fill_color_1 = PatternFill(start_color="E0E0E0", end_color="E0E0E0", fill_type="solid")  # Light gray
