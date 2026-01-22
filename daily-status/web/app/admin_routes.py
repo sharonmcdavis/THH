@@ -3,7 +3,7 @@ import shutil
 from tkinter import messagebox
 from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
-from .data_storage import save_data, update_data, apply_alternate_shading
+from .data_storage import save_data, update_data, shade_weekends
 from .data_loader import load_data_from_file
 from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, admin_login_required
 import os
@@ -304,8 +304,10 @@ def reorder_times():
 
     return load_admin_page()
 
+import calendar
+
 def reorder_excel(times):
-    try:
+    # try:
         # backup excel just in case
         backup_excel()
 
@@ -342,13 +344,22 @@ def reorder_excel(times):
             # Write the header back to row 2
             for col, value in enumerate(header, start=1):
                 sheet.cell(row=2, column=col, value=value)
-            apply_alternate_shading(sheet)
+            
+            month_name = sheet["B1"].value
+            print("calendar list: ", list(calendar.month_name))
+            month_number = list(calendar.month_name).index(month_name)
+
+            print(f"The month number for {month_name} is {month_number}.")
+            year = sheet["C1"].value
+            print("month: ", month_number)
+            print("year: ", year)
+            shade_weekends(sheet, year, month_number)
 
         # Save the workbook
         wb.save(EXCEL_FILE)
         print(f"Excel file successfully reordered and saved to {EXCEL_FILE}")
-    except Exception as e:
-        print(f"Error updating {EXCEL_FILE}: {e}")
+    # except Exception as e:
+    #     print(f"Error updating {EXCEL_FILE}: {e}")
 
 def backup_excel():
     try:
@@ -369,5 +380,3 @@ def backup_excel():
     except Exception as e:
         # Flash an error message if something goes wrong
         flash(f"Error renaming Excel file: {str(e)}", "error")
-
-    return load_admin_page()        
