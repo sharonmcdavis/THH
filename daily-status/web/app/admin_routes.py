@@ -3,7 +3,7 @@ import shutil
 from tkinter import messagebox
 from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
-from .data_storage import save_data, update_data, shade_weekends
+from .data_storage import save_data, update_data, shade_weekends, enable_text_wrapping, default_font
 from .data_loader import load_data_from_file
 from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, admin_login_required
 import os
@@ -340,19 +340,17 @@ def reorder_excel(times):
             for i, row in enumerate(reordered_data, start=3):
                 for j, value in enumerate(row, start=1):
                     sheet.cell(row=i, column=j, value=value)
+                    sheet.cell(row=i, column=j).font = default_font
+                    enable_text_wrapping(sheet, wrap_notes_only=True)
 
             # Write the header back to row 2
             for col, value in enumerate(header, start=1):
                 sheet.cell(row=2, column=col, value=value)
             
             month_name = sheet["B1"].value
-            print("calendar list: ", list(calendar.month_name))
             month_number = list(calendar.month_name).index(month_name)
 
-            print(f"The month number for {month_name} is {month_number}.")
             year = sheet["C1"].value
-            print("month: ", month_number)
-            print("year: ", year)
             shade_weekends(sheet, year, month_number)
 
         # Save the workbook

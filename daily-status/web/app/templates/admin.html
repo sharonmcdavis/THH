@@ -4,6 +4,17 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<style>
+    #loading {
+        display: none; /* Initially hidden */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        color: #333;
+    }
+</style>
 {% endblock %}
 
 {% block header %}Student Activity Tracker{% endblock %}
@@ -204,21 +215,19 @@
         });
     });
 </script>
+{% endblock %}
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const timeList = document.getElementById('time-list');
-        const reorderedTimesInput = document.getElementById('reordered-times');
-        const reorderTimesForm = document.getElementById('reorder-times-form');
+{% block nav %}
+<div id="loading">Processing... Please wait.</div>
 
-        // Handle form submission
-        reorderTimesForm.addEventListener('submit', (e) => {
-            const reorderedTimes = Array.from(timeList.children).map(item => item.dataset.value);
-            console.log('Reordered Times:', reorderedTimes); // Debugging output
-            reorderedTimesInput.value = JSON.stringify(reorderedTimes); // Save the new order in the hidden input
-        });
+<script>
+    const form = document.getElementById("time-reorder-form");
+    const loading = document.getElementById("loading");
+
+    form.addEventListener("submit", () => {
+        loading.style.display = "block"; // Show the loading message
     });
-</script> -->
+</script>
 {% endblock %}
 
 {% block content %}

@@ -274,7 +274,7 @@ def write_to_excel(data):
 
     username = data.get("Username", "N/A")
     # Concatenate the username with the other values
-    concatenated_values = "(" + username + ") " + concatenated_values
+    concatenated_values = "(" + username + ") \n" + concatenated_values
 
     # Write the concatenated values to the appropriate cell
     sheet[f"{day_column}{time_row}"] = concatenated_values
@@ -291,7 +291,6 @@ def write_to_excel(data):
     return True
 
 def enable_text_wrapping(sheet, wrap_notes_only=False):
-    print("...in enable_text_wrapping")
     # Iterate through all cells in the sheet
     for row in sheet.iter_rows():
         for cell in row:
