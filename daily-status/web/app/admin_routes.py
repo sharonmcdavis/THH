@@ -11,9 +11,6 @@ from reportlab.lib.pagesizes import letter
 import openpyxl
 from flask import send_file, current_app
 from openpyxl import load_workbook
-from odf.opendocument import OpenDocumentSpreadsheet
-from odf.table import Table, TableRow, TableCell
-from odf.text import P
 
 admin = Blueprint('admin', __name__)
 
