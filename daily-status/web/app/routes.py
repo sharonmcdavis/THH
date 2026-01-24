@@ -206,6 +206,7 @@ def daily_report():
         # Get the current date in the format matching your Excel column headers
         display_date = datetime.now().strftime('%B %d, %Y')
         today = datetime.now().strftime('%d')
+        print("today: ", today)
 
         # Read the Excel file
         excel_data = pd.ExcelFile(EXCEL_FILE)
@@ -213,7 +214,9 @@ def daily_report():
 
         # Loop through each sheet and filter data for the current day's column
         for sheet_name in excel_data.sheet_names:
+            print("sheet: ", sheet_name)
             df = excel_data.parse(sheet_name)
+            print("df: ", df)
 
             # Skip the first row of the DataFrame
             df = df.iloc[1:].reset_index(drop=True)
@@ -225,26 +228,30 @@ def daily_report():
             df = df.fillna('')
 
             # Convert numeric columns to integers where possible
-            df = df.applymap(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x)
+            df = df.map(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x)
 
             # Store the cleaned data for each sheet
             sheets_data[sheet_name] = df.to_dict(orient='records')
 
             # Extract the first column dynamically (starting at row 2)
             time_column = df.iloc[1:, 0].reset_index(drop=True)  # First column, skipping the first row
+            print("time_column: ", time_column)
+
             if today in df.columns:
                 # Extract the data for the current day's column
                 today_column = df[today].iloc[1:].reset_index(drop=True)  # Skip the first row for the "today" column
+                print("today: ", today)
+                print("today_column: ", today_column)
 
                 # Combine the time column and today's column into a list of dictionaries
                 combined_data = [
                     {'Time': time, 'Value': value}
                     for time, value in zip(time_column, today_column)
                 ]
+                print("found data: ", combined_data)
 
                 # Store the combined data in the sheets_data dictionary
                 sheets_data[sheet_name] = combined_data
-                print("sheets_data:", sheets_data)
 
         # Render the data in the new template
         return render_template('daily_report.html', sheets_data=sheets_data, today=display_date)
@@ -302,6 +309,7 @@ def student_daily_report():
         # Get the current date in the format matching your Excel column headers
         display_date = datetime.now().strftime('%B %d, %Y')
         today = datetime.now().strftime('%d')
+        print("today: ", today)
 
         # Read the Excel file
         excel_data = pd.ExcelFile(EXCEL_FILE)
@@ -309,7 +317,7 @@ def student_daily_report():
 
         # Loop through each sheet and filter data for the current day's column
         for sheet_name in excel_data.sheet_names:
-            # print("**parsed: ", sheet_name.split('-')[:-1])
+            print("**parsed: ", sheet_name.split('-')[:-1])
             parsed = sheet_name.split('-')[:-1]
 
             student_name = '-'.join(parsed).strip()  # Join the name parts with a space and strip whitespace
@@ -339,7 +347,7 @@ def student_daily_report():
             df = df.fillna('')
 
             # Convert numeric columns to integers where possible
-            df = df.applymap(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x)
+            df = df.apply(lambda col: col.map(lambda x: int(x) if isinstance(x, float) and x.is_integer() else x))
 
             # Store the cleaned data for each sheet
             sheets_data[sheet_name] = df.to_dict(orient='records')
