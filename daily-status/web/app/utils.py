@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Define file paths
 DATA_FILE = os.path.join(BASE_DIR, "app_data.json")
 EXCEL_FILE = os.path.join(BASE_DIR, "student_activity.xlsx")
+ODS_FILE = os.path.join(BASE_DIR, "student_activity.ods")
 BACKUP_FOLDER = os.path.join("./backups/")
 ARCHIVE_FOLDER = os.path.join("./archive/")
 

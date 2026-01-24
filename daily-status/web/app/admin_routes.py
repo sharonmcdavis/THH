@@ -3,12 +3,17 @@ import shutil
 from tkinter import messagebox
 from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
-from .data_storage import save_data, update_data, shade_weekends, enable_text_wrapping, default_font
+from .data_storage import save_data, update_data, shade_weekends, enable_text_wrapping, default_font, set_font
 from .data_loader import load_data_from_file
-from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, admin_login_required
+from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, ODS_FILE, admin_login_required
 import os
 from reportlab.lib.pagesizes import letter
 import openpyxl
+from flask import send_file, current_app
+from openpyxl import load_workbook
+from odf.opendocument import OpenDocumentSpreadsheet
+from odf.table import Table, TableRow, TableCell
+from odf.text import P
 
 admin = Blueprint('admin', __name__)
 
@@ -307,7 +312,7 @@ def reorder_times():
 import calendar
 
 def reorder_excel(times):
-    # try:
+    try:
         # backup excel just in case
         backup_excel()
 
@@ -318,46 +323,40 @@ def reorder_excel(times):
         for sheet_name in wb.sheetnames:
             sheet = wb[sheet_name]
 
-            # Read the rows starting from row 3 (A3)
-            rows = list(sheet.iter_rows(min_row=3, max_col=sheet.max_column, values_only=True))
+            # Read the existing data (excluding the first 3 rows)
+            data = []
+            for row in sheet.iter_rows(min_row=4, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column, values_only=True):
+                data.append(row)
 
-            # Extract the header row (if any) and the data rows
-            header = [cell.value for cell in sheet[2]]  # Row 2 is the header
-            data = rows
+            # Create a mapping of times to rows
+            time_to_row = {row[0]: row for row in data}  # Assuming column A contains the times
 
-            # Create a dictionary to map times to their corresponding rows
-            time_to_row = {row[0]: row for row in data if row[0] in times}
+            # Sort the data based on the provided times
+            sorted_data = [time_to_row[time] for time in times if time in time_to_row]
 
-            # Reorder the rows based on the `times` list
-            reordered_data = [time_to_row[time] for time in times if time in time_to_row]
-
-            # Clear the existing rows starting from row 3
-            for row in sheet.iter_rows(min_row=3, max_row=sheet.max_row):
+            # Clear the rows starting from A4
+            for row in sheet.iter_rows(min_row=4, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
                 for cell in row:
                     cell.value = None
 
-            # Write the reordered data back to the sheet
-            for i, row in enumerate(reordered_data, start=3):
-                for j, value in enumerate(row, start=1):
-                    sheet.cell(row=i, column=j, value=value)
-                    sheet.cell(row=i, column=j).font = default_font
-                    enable_text_wrapping(sheet, wrap_notes_only=True)
+            # Write the sorted data back to the sheet starting from A4
+            for row_idx, row_data in enumerate(sorted_data, start=4):
+                for col_idx, value in enumerate(row_data, start=1):
+                    sheet.cell(row=row_idx, column=col_idx, value=value)
 
-            # Write the header back to row 2
-            for col, value in enumerate(header, start=1):
-                sheet.cell(row=2, column=col, value=value)
-            
             month_name = sheet["B1"].value
             month_number = list(calendar.month_name).index(month_name)
 
             year = sheet["C1"].value
             shade_weekends(sheet, year, month_number)
+            set_font(sheet)
+            enable_text_wrapping(sheet)
 
         # Save the workbook
         wb.save(EXCEL_FILE)
         print(f"Excel file successfully reordered and saved to {EXCEL_FILE}")
-    # except Exception as e:
-    #     print(f"Error updating {EXCEL_FILE}: {e}")
+    except Exception as e:
+        print(f"Error updating {EXCEL_FILE}: {e}")
 
 def backup_excel():
     try:
@@ -378,3 +377,43 @@ def backup_excel():
     except Exception as e:
         # Flash an error message if something goes wrong
         flash(f"Error renaming Excel file: {str(e)}", "error")
+
+@admin.route("/ods", methods=["GET"])
+def ods():
+    """Convert the Excel file to ODS and send it to the user."""
+    # Check if the Excel file exists
+    if not os.path.exists(EXCEL_FILE):
+        print(f"Excel file not found: {EXCEL_FILE}")
+        return "Excel file not found.", 404
+
+    print(f"Excel file found: {EXCEL_FILE}")
+
+    # Load the Excel file
+    wb = load_workbook(EXCEL_FILE)
+    sheet = wb.active  # Get the active sheet
+    print(f"Active sheet title: {sheet.title}")
+
+    # Create an OpenDocument Spreadsheet
+    ods = OpenDocumentSpreadsheet()
+    table = Table(name=sheet.title)
+
+    # Iterate through rows and columns in the Excel sheet
+    for row in sheet.iter_rows(values_only=True):
+        print(f"Row data: {row}")  # Debugging: Print the row data
+        ods_row = TableRow()
+        for cell_value in row:
+            print(f"Adding cell to ODS: {cell_value}")  # Debugging: Print the cell value
+            ods_cell = TableCell()
+            ods_cell.addElement(P(text=str(cell_value) if cell_value is not None else ""))
+            ods_row.addElement(ods_cell)
+        table.addElement(ods_row)
+
+    ods.spreadsheet.addElement(table)
+
+    # Save the ODS file
+    ods_file_path = ODS_FILE
+    ods.save(ods_file_path)
+    print(f"ODS file saved: {ods_file_path}")
+
+    # Send the ODS file to the user
+    return send_file(ods_file_path, as_attachment=True, download_name=ODS_FILE)

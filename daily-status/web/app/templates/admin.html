@@ -33,6 +33,7 @@
         <a href="/main" onclick="closeMenu()">Return</a>
         <a href="/logout" onclick="closeMenu()">Logout</a>
         <a href="/admin/excel" onclick="closeMenu()">View Excel</a>
+        <a href="/admin/ods" onclick="closeMenu()">Download Report</a>
         <a href="/daily-report" onclick="openPopup(event, '/daily-report')">Today's Report</a>
         <a href="/admin/clear_excel" onclick="closeMenu()">Clear Excel</a>
     </div>
@@ -217,21 +218,9 @@
 </script>
 {% endblock %}
 
-{% block nav %}
-<div id="loading">Processing... Please wait.</div>
-
-<script>
-    const form = document.getElementById("time-reorder-form");
-    const loading = document.getElementById("loading");
-
-    form.addEventListener("submit", () => {
-        loading.style.display = "block"; // Show the loading message
-    });
-</script>
-{% endblock %}
-
 {% block content %}
-<div class="window" role="region" aria-label="Admin panels">
+    <div class="window" role="region" aria-label="Admin panels">
+
     <!-- Students Section -->
     <div class="admin-window">
         <div class="student-select-container">
@@ -286,7 +275,7 @@
                         {% endfor %}
                     </ul>
                     <input type="hidden" name="reordered_times" id="reordered-times">
-                    <button type="submit" class="button green-button">Save Order</button>
+                    <button type="submit" id="saveTimeOrderButton" class="button green-button">Save Order</button>
                 </form>
                 <!-- Add Time Form -->
                 <form action="/admin/add_time" method="POST">
@@ -295,6 +284,43 @@
                 </form>
             </div>
         </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay">Processing... Please wait.<br>(Updating Excel...)</div>
+
+        <script>
+            const timeform = document.getElementById("time-reorder-form");
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            const saveOrderButton = document.getElementById("saveTimeOrderButton");
+
+            // Add event listener to the form submission
+            timeform.addEventListener("submit", () => {
+                // Show the loading overlay
+                loadingOverlay.style.display = "block";
+
+                // Disable the button to prevent multiple submissions
+                saveOrderButton.disabled = true;
+            });
+        </script>
+
+        <style>
+            /* Style for the loading overlay */
+            #loadingOverlay {
+                display: none; /* Initially hidden */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+                z-index: 1000; /* Ensure it appears above other elements */
+                color: white;
+                font-size: 24px;
+                text-align: center;
+                line-height: 100vh; /* Vertically center the text */
+            }
+        </style>
+
         <hr class="form-separator">
     </div>
 

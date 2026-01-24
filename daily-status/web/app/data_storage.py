@@ -67,11 +67,8 @@ def update_data(data):
     except Exception as e:
         print(f"Error saving data to {DATA_FILE}: {e}")
 
-def set_font(sheet, font_name="Century Gothic", header_font_size=11, default_font_size=8):
+def set_font(sheet):
     """Set the font for all cells in the sheet with specific sizes for headers and column A."""
-    header_font = Font(name=font_name, size=header_font_size)  # Font for column A and rows 1 & 2
-    default_font = Font(name=font_name, size=default_font_size)  # Font for all other cells
-
     # Iterate through all rows and columns in the sheet
     for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
         for cell in row:
@@ -173,122 +170,127 @@ def write_to_excel(data):
     current_month = today.strftime("%B")  # Full month name (e.g., "December")
     current_day = today.day  # Day of the month (e.g., 31)
 
-    # Load the workbook if it exists, otherwise create a new one
-    if os.path.exists(EXCEL_FILE):
-        workbook = openpyxl.load_workbook(EXCEL_FILE)
-    else:
-        workbook = openpyxl.Workbook()
-        # Remove the default sheet created by openpyxl
-        default_sheet = workbook.active
-        workbook.remove(default_sheet)
+    try:
+        # Load the workbook if it exists, otherwise create a new one
+        if os.path.exists(EXCEL_FILE):
+            workbook = openpyxl.load_workbook(EXCEL_FILE)
+        else:
+            workbook = openpyxl.Workbook()
+            # Remove the default sheet created by openpyxl
+            default_sheet = workbook.active
+            workbook.remove(default_sheet)
 
-    print("found workbook")
+        print("found workbook")
 
-    # Get the student's name
-    student_name = data["Student"]
+        # Get the student's name
+        student_name = data["Student"]
 
-    # Create the sheet name for the current student and month
-    sheet_name = f"{student_name}-{current_month}"
+        # Create the sheet name for the current student and month
+        sheet_name = f"{student_name}-{current_month}"
 
-    print(f"Looking for time {data['Time']} in sheet {sheet_name}")
+        print(f"Looking for time {data['Time']} in sheet {sheet_name}")
 
-    # Check if the sheet already exists, otherwise create it
-    if sheet_name not in workbook.sheetnames:
-        print ("sheet not in workbook - create")
-        sheet = workbook.create_sheet(title=sheet_name)
+        # Check if the sheet already exists, otherwise create it
+        if sheet_name not in workbook.sheetnames:
+            print ("sheet not in workbook - create")
+            sheet = workbook.create_sheet(title=sheet_name)
 
-        # Add the student's name in the first row
-        sheet["A1"] = student_name
-        sheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
-        sheet["B1"] = current_month
-        sheet["B1"].alignment = Alignment(horizontal="left", vertical="center")
-        sheet["C1"] = today.year
-        sheet["C1"].alignment = Alignment(horizontal="left", vertical="center")
+            # Add the student's name in the first row
+            sheet["A1"] = student_name
+            sheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
+            sheet["B1"] = current_month
+            sheet["B1"].alignment = Alignment(horizontal="left", vertical="center")
+            sheet["C1"] = today.year
+            sheet["C1"].alignment = Alignment(horizontal="left", vertical="center")
 
-        # Add headers in the third row
-        sheet["A3"] = "Dates"
-        # for day in range(1, 32):  # Maximum days in a month
-        for day in range(1, calendar.monthrange(today.year, today.month)[1] + 1):
-            col_letter = openpyxl.utils.get_column_letter(day + 1)  # Start from column B
-            sheet[f"{col_letter}3"] = str(day)
+            # Add headers in the third row
+            sheet["A3"] = "Dates"
+            # for day in range(1, 32):  # Maximum days in a month
+            for day in range(1, calendar.monthrange(today.year, today.month)[1] + 1):
+                col_letter = openpyxl.utils.get_column_letter(day + 1)  # Start from column B
+                sheet[f"{col_letter}3"] = str(day)
 
-        print("Times list:", times)
-        # Add times in column A starting from row 3
+            print("Times list:", times)
+            # Add times in column A starting from row 3
+            for idx, time in enumerate(times, start=4):
+                sheet[f"A{idx}"] = time
+
+            # Apply alternate shading
+            # shade_weekends(sheet, year=today.year, month=today.month)
+            # set_font(sheet)
+
+        else:
+            # If the sheet already exists, load it
+            print("sheet already exists")
+            sheet = workbook[sheet_name]
+
         for idx, time in enumerate(times, start=4):
             sheet[f"A{idx}"] = time
 
-        # Apply alternate shading
+        # Find the column for the current day
+        day_column = None
+        for col in range(2, sheet.max_column + 1):  # Start from column B
+            col_letter = openpyxl.utils.get_column_letter(col)
+            cell_value = sheet[f"{col_letter}3"].value  # Get the value in row 3 for the current column
+
+            # Ensure both values are integers for comparison
+            if cell_value is not None and int(cell_value) == int(current_day):
+                print("found match day column")
+                day_column = col_letter
+                break
+
+        # Raise an error if the column is not found
+        if day_column is None:
+            raise ValueError(f"Could not find the column for day {current_day} in sheet {sheet.title}.")
+
+        # Find the row for the selected time
+        time_row = None
+        for row in range(3, sheet.max_row + 1):  # Start from row 3
+            if sheet[f"A{row}"].value == data["Time"]:
+                time_row = row
+                break
+
+        if not time_row:
+            raise ValueError(f"Could not find the row for time {data['Time']} in sheet {sheet_name}.")
+
+        print("time_row:", time_row)
+        print(data)
+
+        # Collect values from column1, column2, column3, column4, and notes
+        values_to_concatenate = [
+            data[key].strip() for key in ["column2", "column1", "column3", "column4"]
+            if key in data and data[key] and data[key].strip() != "UNSELECTED"  # Exclude empty, None, or "UNSELECTED"
+        ]
+        print("values_to_concatenate:", values_to_concatenate)
+
+        # Join the remaining values into a single string with a newline delimiter
+        concatenated_values = "".join(values_to_concatenate)
+
+        # Add "Notes" on a new line if it exists
+        if "Notes" in data and data["Notes"] and data["Notes"].strip() != "UNSELECTED":
+            concatenated_values += "\n" + data["Notes"].strip()  # Add Notes on a new line
+
+        username = data.get("Username", "N/A")
+        # Concatenate the username with the other values
+        concatenated_values = "(" + username + ") " + concatenated_values
+
+        # Write the concatenated values to the appropriate cell
+        sheet[f"{day_column}{time_row}"] = concatenated_values
+        sheet[f"{day_column}{time_row}"].font = default_font
+        enable_text_wrapping(sheet, wrap_notes_only=True)
         shade_weekends(sheet, year=today.year, month=today.month)
         set_font(sheet)
 
-    else:
-        # If the sheet already exists, load it
-        print("sheet already exists")
-        sheet = workbook[sheet_name]
+        # adjust_column_width(sheet)
 
-    for idx, time in enumerate(times, start=4):
-        sheet[f"A{idx}"] = time
+        # Save the workbook
+        workbook.save(EXCEL_FILE)
+        print("done with excel")
 
-    # Find the column for the current day
-    day_column = None
-    for col in range(2, sheet.max_column + 1):  # Start from column B
-        col_letter = openpyxl.utils.get_column_letter(col)
-        cell_value = sheet[f"{col_letter}3"].value  # Get the value in row 3 for the current column
-
-        # Ensure both values are integers for comparison
-        if cell_value is not None and int(cell_value) == int(current_day):
-            print("found match day column")
-            day_column = col_letter
-            break
-
-    # Raise an error if the column is not found
-    if day_column is None:
-        raise ValueError(f"Could not find the column for day {current_day} in sheet {sheet.title}.")
-
-    # Find the row for the selected time
-    time_row = None
-    for row in range(3, sheet.max_row + 1):  # Start from row 3
-        if sheet[f"A{row}"].value == data["Time"]:
-            time_row = row
-            break
-
-    if not time_row:
-        raise ValueError(f"Could not find the row for time {data['Time']} in sheet {sheet_name}.")
-
-    print("time_row:", time_row)
-    print(data)
-
-    # Collect values from column1, column2, column3, column4, and notes
-    values_to_concatenate = [
-        data[key].strip() for key in ["column2", "column1", "column3", "column4"]
-        if key in data and data[key] and data[key].strip() != "UNSELECTED"  # Exclude empty, None, or "UNSELECTED"
-    ]
-    print("values_to_concatenate:", values_to_concatenate)
-
-    # Join the remaining values into a single string with a newline delimiter
-    concatenated_values = "".join(values_to_concatenate)
-
-    # Add "Notes" on a new line if it exists
-    if "Notes" in data and data["Notes"] and data["Notes"].strip() != "UNSELECTED":
-        concatenated_values += "\n" + data["Notes"].strip()  # Add Notes on a new line
-
-    username = data.get("Username", "N/A")
-    # Concatenate the username with the other values
-    concatenated_values = "(" + username + ") \n" + concatenated_values
-
-    # Write the concatenated values to the appropriate cell
-    sheet[f"{day_column}{time_row}"] = concatenated_values
-    sheet[f"{day_column}{time_row}"].font = default_font
-    enable_text_wrapping(sheet, wrap_notes_only=True)
-    # adjust_column_width(sheet)
-
-    # Save the workbook
-    workbook.save(EXCEL_FILE)
-    # enable_text_wrapping(EXCEL_FILE)
-
-    print("done with excel")
-
-    return True
+        return True
+    except Exception as e:
+        print(f"Error updating {EXCEL_FILE}: {e}")
+    
 
 def enable_text_wrapping(sheet, wrap_notes_only=False):
     # Iterate through all cells in the sheet
@@ -303,25 +305,25 @@ def enable_text_wrapping(sheet, wrap_notes_only=False):
                     # Enable wrapping for all cells
                     cell.alignment = Alignment(wrap_text=True)
 
-def adjust_column_width(sheet):
-    """Adjust the column width to fit the text in each column, skipping empty columns."""
-    for col in range(1, sheet.max_column + 1):  # Iterate through all columns
-        col_letter = get_column_letter(col)  # Get the column letter (e.g., A, B, C)
-        max_length = 0  # Initialize the maximum length for the column
-        has_data = False  # Flag to check if the column has any data
+# def adjust_column_width(sheet):
+#     """Adjust the column width to fit the text in each column, skipping empty columns."""
+#     for col in range(1, sheet.max_column + 1):  # Iterate through all columns
+#         col_letter = get_column_letter(col)  # Get the column letter (e.g., A, B, C)
+#         max_length = 0  # Initialize the maximum length for the column
+#         has_data = False  # Flag to check if the column has any data
 
-        for row in range(1, sheet.max_row + 1):  # Iterate through all rows in the column
-            cell = sheet.cell(row=row, column=col)
-            if cell.value:  # Check if the cell has a value
-                has_data = True  # Mark that the column has data
-                # Split the cell value into lines based on wrapping (newlines)
-                lines = str(cell.value).split("\n")
-                # Find the longest line in the cell
-                max_line_length = max(len(line) for line in lines)
-                # Update the maximum length for the column
-                max_length = max(max_length, max_line_length)
+#         for row in range(1, sheet.max_row + 1):  # Iterate through all rows in the column
+#             cell = sheet.cell(row=row, column=col)
+#             if cell.value:  # Check if the cell has a value
+#                 has_data = True  # Mark that the column has data
+#                 # Split the cell value into lines based on wrapping (newlines)
+#                 lines = str(cell.value).split("\n")
+#                 # Find the longest line in the cell
+#                 max_line_length = max(len(line) for line in lines)
+#                 # Update the maximum length for the column
+#                 max_length = max(max_length, max_line_length)
 
-        # Only adjust the column width if the column has data
-        if has_data:
-            # Set the column width (add some padding for better readability)
-            sheet.column_dimensions[col_letter].width = max_length + 2
+#         # Only adjust the column width if the column has data
+#         if has_data:
+#             # Set the column width (add some padding for better readability)
+#             sheet.column_dimensions[col_letter].width = max_length + 2
