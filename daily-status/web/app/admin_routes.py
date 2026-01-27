@@ -1,15 +1,13 @@
 from datetime import datetime
 import shutil
-from tkinter import messagebox
 from flask import Blueprint, json, render_template, request, redirect, session, url_for, flash, send_file
 import openpyxl
-from .data_storage import save_data, update_data, shade_weekends, enable_text_wrapping, default_font, set_font
+from .data_storage import save_data, update_data, format_worksheet
 from .data_loader import load_data_from_file
-from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ARCHIVE_FOLDER, ODS_FILE, admin_login_required
+from .utils import login_required, ADMIN_PASSWORD, EXCEL_FILE, ADMIN_EXCEL_FILE, ARCHIVE_FOLDER, admin_login_required
 import os
-from reportlab.lib.pagesizes import letter
 import openpyxl
-from flask import send_file, current_app
+from flask import send_file
 from openpyxl import load_workbook
 
 admin = Blueprint('admin', __name__)
@@ -228,6 +226,28 @@ def excel():
     
     return load_admin_page()
 
+@admin.route('/slim_excel', methods=['GET'])
+@login_required
+@admin_login_required
+def slim_excel():
+    try:
+        # Check if the file exists
+        if not os.path.exists(ADMIN_EXCEL_FILE):
+            raise FileNotFoundError(f"File not found: {ADMIN_EXCEL_FILE}")
+        
+        # Send the file as a downloadable response
+        return send_file(ADMIN_EXCEL_FILE, as_attachment=True)
+    except FileNotFoundError as e:
+        # Flash an error message if the file is not found
+        flash(f"An error occurred while opening the Excel file: {str(e)}", "error")
+        return redirect(url_for('admin.admin_window'))
+    except Exception as e:
+        # Handle other exceptions
+        flash(f"An unexpected error occurred: {str(e)}", "error")
+        return redirect(url_for('admin.admin_window'))
+    
+    return load_admin_page()
+
 @admin.route('/clear_excel', methods=['GET', 'POST'])
 def clear_excel():
     try:
@@ -315,42 +335,56 @@ def reorder_excel(times):
 
         # Load the Excel workbook
         wb = openpyxl.load_workbook(EXCEL_FILE)
+        admin_wb = openpyxl.load_workbook(ADMIN_EXCEL_FILE)
 
         # Iterate through all sheets in the workbook
         for sheet_name in wb.sheetnames:
             sheet = wb[sheet_name]
+            admin_sheet = admin_wb[sheet_name]
 
             # Read the existing data (excluding the first 3 rows)
             data = []
-            for row in sheet.iter_rows(min_row=4, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column, values_only=True):
+            admin_data = []
+            for row in sheet.iter_rows(min_row=5, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column, values_only=True):
                 data.append(row)
+
+            for admin_row in admin_sheet.iter_rows(min_row=5, max_row=admin_sheet.max_row, min_col=1, max_col=admin_sheet.max_column, values_only=True):
+                admin_data.append(admin_row)
 
             # Create a mapping of times to rows
             time_to_row = {row[0]: row for row in data}  # Assuming column A contains the times
+            admin_time_to_row = {row[0]: row for row in admin_data}  # Assuming column A contains the times
 
             # Sort the data based on the provided times
             sorted_data = [time_to_row[time] for time in times if time in time_to_row]
+            admin_sorted_data = [admin_time_to_row[time] for time in times if time in admin_time_to_row]
 
             # Clear the rows starting from A4
-            for row in sheet.iter_rows(min_row=4, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
+            for row in sheet.iter_rows(min_row=5, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column):
                 for cell in row:
                     cell.value = None
+            for admin_row in admin_sheet.iter_rows(min_row=5, max_row=admin_sheet.max_row, min_col=1, max_col=admin_sheet.max_column):
+                for admin_cell in admin_row:
+                    admin_cell.value = None
 
             # Write the sorted data back to the sheet starting from A4
-            for row_idx, row_data in enumerate(sorted_data, start=4):
+            for row_idx, row_data in enumerate(sorted_data, start=5):
                 for col_idx, value in enumerate(row_data, start=1):
                     sheet.cell(row=row_idx, column=col_idx, value=value)
+            for row_idx, row_data in enumerate(admin_sorted_data, start=5):
+                for col_idx, value in enumerate(row_data, start=1):
+                    admin_sheet.cell(row=row_idx, column=col_idx, value=value)
 
-            month_name = sheet["B1"].value
+            month_name = sheet["A2"].value
             month_number = list(calendar.month_name).index(month_name)
 
-            year = sheet["C1"].value
-            shade_weekends(sheet, year, month_number)
-            set_font(sheet)
-            enable_text_wrapping(sheet)
+            year = sheet["A3"].value
+            sheet = format_worksheet(sheet, year, month_number)
+            admin_sheet = format_worksheet(admin_sheet, year, month_number)
 
         # Save the workbook
         wb.save(EXCEL_FILE)
+        admin_wb.save(ADMIN_EXCEL_FILE)
         print(f"Excel file successfully reordered and saved to {EXCEL_FILE}")
     except Exception as e:
         print(f"Error updating {EXCEL_FILE}: {e}")
@@ -370,6 +404,18 @@ def backup_excel():
 
         # Rename the file
         shutil.copy(EXCEL_FILE, new_file_path)
+
+
+        # ADMIN_EXCEL_FILE
+        directory, file_name = os.path.split(ADMIN_EXCEL_FILE)
+        file_name_without_ext, file_ext = os.path.splitext(file_name)
+
+        # Create the new file name with the timestamp
+        new_file_name = f"{file_name_without_ext}_{timestamp}{file_ext}"
+        new_file_path = os.path.join(directory, ARCHIVE_FOLDER, new_file_name)
+
+        # Rename the file
+        shutil.copy(ADMIN_EXCEL_FILE, new_file_path)
 
     except Exception as e:
         # Flash an error message if something goes wrong

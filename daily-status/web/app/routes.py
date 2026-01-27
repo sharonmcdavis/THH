@@ -234,12 +234,12 @@ def daily_report():
             sheets_data[sheet_name] = df.to_dict(orient='records')
 
             # Extract the first column dynamically (starting at row 2)
-            time_column = df.iloc[1:, 0].reset_index(drop=True)  # First column, skipping the first row
+            time_column = df.iloc[3:, 0].reset_index(drop=True)  # First column, skipping the first row
             print("time_column: ", time_column)
 
             if today in df.columns:
                 # Extract the data for the current day's column
-                today_column = df[today].iloc[1:].reset_index(drop=True)  # Skip the first row for the "today" column
+                today_column = df[today].iloc[3:].reset_index(drop=True)  # Skip the first row for the "today" column
                 print("today: ", today)
                 print("today_column: ", today_column)
 
@@ -338,7 +338,7 @@ def student_daily_report():
                     print("not skipping")
 
             # Skip the first row of the DataFrame
-            df = df.iloc[1:].reset_index(drop=True)
+            df = df.iloc[2:].reset_index(drop=True)
 
             # Remove the word "Unnamed:" from column names
             df = df.rename(columns=lambda x: str(x).replace('Unnamed:', '').strip())
@@ -353,10 +353,10 @@ def student_daily_report():
             sheets_data[sheet_name] = df.to_dict(orient='records')
 
             # Extract the first column dynamically (starting at row 2)
-            time_column = df.iloc[1:, 0].reset_index(drop=True)  # First column, skipping the first row
+            time_column = df.iloc[2:, 0].reset_index(drop=True)  # First column, skipping the first row
             if today in df.columns:
                 # Extract the data for the current day's column
-                today_column = df[today].iloc[1:].reset_index(drop=True)  # Skip the first row for the "today" column
+                today_column = df[today].iloc[2:].reset_index(drop=True)  # Skip the first row for the "today" column
 
                 # Combine the time column and today's column into a list of dictionaries
                 combined_data = [
