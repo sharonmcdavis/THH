@@ -109,121 +109,121 @@ def write_to_excel(data):
     current_month = today.strftime("%B")  # Full month name (e.g., "December")
     current_day = today.day  # Day of the month (e.g., 31)
 
-    # try:
-    # Load the workbook if it exists, otherwise create a new one
-    if os.path.exists(EXCEL_FILE):
-        workbook = openpyxl.load_workbook(EXCEL_FILE)
-    else:
-        workbook = openpyxl.Workbook()
-        # Remove the default sheet created by openpyxl
-        default_sheet = workbook.active
-        workbook.remove(default_sheet)
+    try:
+        # Load the workbook if it exists, otherwise create a new one
+        if os.path.exists(EXCEL_FILE):
+            workbook = openpyxl.load_workbook(EXCEL_FILE)
+        else:
+            workbook = openpyxl.Workbook()
+            # Remove the default sheet created by openpyxl
+            default_sheet = workbook.active
+            workbook.remove(default_sheet)
 
-    # load admin version 
-    if os.path.exists(ADMIN_EXCEL_FILE):
-        admin_workbook = openpyxl.load_workbook(ADMIN_EXCEL_FILE)
-    else:
-        admin_workbook = openpyxl.Workbook()
-        # Remove the default sheet created by openpyxl
-        admin_default_sheet = admin_workbook.active
-        admin_workbook.remove(admin_default_sheet)
+        # load admin version 
+        # if os.path.exists(ADMIN_EXCEL_FILE):
+        #     admin_workbook = openpyxl.load_workbook(ADMIN_EXCEL_FILE)
+        # else:
+        #     admin_workbook = openpyxl.Workbook()
+        #     # Remove the default sheet created by openpyxl
+        #     admin_default_sheet = admin_workbook.active
+        #     admin_workbook.remove(admin_default_sheet)
 
-    print("found workbooks")
+        print("found workbooks")
 
-    # Get the student's name
-    student_name = data["Student"]
+        # Get the student's name
+        student_name = data["Student"]
 
-    # Create the sheet name for the current student and month
-    sheet_name = f"{student_name}-{current_month}"
+        # Create the sheet name for the current student and month
+        sheet_name = f"{student_name}-{current_month}"
 
-    print(f"Looking for time {data['Time']} in sheet {sheet_name}")
+        print(f"Looking for time {data['Time']} in sheet {sheet_name}")
 
-    # Check if the sheet already exists, otherwise create it
-    if sheet_name not in workbook.sheetnames:
-        print ("sheet not in workbook - create")
-        sheet = workbook.create_sheet(title=sheet_name)
-        admin_sheet = admin_workbook.create_sheet(title=sheet_name)
+        # Check if the sheet already exists, otherwise create it
+        if sheet_name not in workbook.sheetnames:
+            print ("sheet not in workbook - create")
+            sheet = workbook.create_sheet(title=sheet_name)
+            # admin_sheet = admin_workbook.create_sheet(title=sheet_name)
 
-        sheet = create_worksheet(sheet, student_name, current_month, today)
-        admin_sheet = create_worksheet(admin_sheet, student_name, current_month, today)
-    else:
-        # If the sheet already exists, load it
-        print("sheet already exists")
-        sheet = workbook[sheet_name]
-        admin_sheet = admin_workbook[sheet_name]
+            sheet = create_worksheet(sheet, student_name, current_month, today)
+            # admin_sheet = create_worksheet(admin_sheet, student_name, current_month, today)
+        else:
+            # If the sheet already exists, load it
+            print("sheet already exists")
+            sheet = workbook[sheet_name]
+            # admin_sheet = admin_workbook[sheet_name]
 
-    # Find the column for the current day
-    day_column = None
-    for col in range(2, sheet.max_column + 1):  # Start from column B
-        col_letter = openpyxl.utils.get_column_letter(col)
-        cell_value = sheet[f"{col_letter}4"].value  # Get the value in row 4 for the current column
-        print("cell_value: ", cell_value)
+        # Find the column for the current day
+        day_column = None
+        for col in range(2, sheet.max_column + 1):  # Start from column B
+            col_letter = openpyxl.utils.get_column_letter(col)
+            cell_value = sheet[f"{col_letter}4"].value  # Get the value in row 4 for the current column
+            print("cell_value: ", cell_value)
 
-        # Ensure both values are integers for comparison
-        if col is not None and int(cell_value) == int(current_day):
-            print("found match day column")
-            print("col: ", col)
-            print("cell_Value: ", cell_value)
-            print("current_day: ", current_day)
-            day_column = col_letter
-            break
+            # Ensure both values are integers for comparison
+            if col is not None and int(cell_value) == int(current_day):
+                print("found match day column")
+                print("col: ", col)
+                print("cell_Value: ", cell_value)
+                print("current_day: ", current_day)
+                day_column = col_letter
+                break
 
-    # Raise an error if the column is not found
-    if day_column is None:
-        raise ValueError(f"Could not find the column for day {current_day} in sheet {sheet.title}.")
+        # Raise an error if the column is not found
+        if day_column is None:
+            raise ValueError(f"Could not find the column for day {current_day} in sheet {sheet.title}.")
 
-    print("day_column:", day_column)
+        print("day_column:", day_column)
 
-    # Find the row for the selected time
-    time_row = None
-    for row in range(5, sheet.max_row + 1):  # Start from row 5
-        if sheet[f"A{row}"].value == data["Time"]:
-            time_row = row
-            break
+        # Find the row for the selected time
+        time_row = None
+        for row in range(5, sheet.max_row + 1):  # Start from row 5
+            if sheet[f"A{row}"].value == data["Time"]:
+                time_row = row
+                break
 
-    if not time_row:
-        raise ValueError(f"Could not find the row for time {data['Time']} in sheet {sheet_name}.")
+        if not time_row:
+            raise ValueError(f"Could not find the row for time {data['Time']} in sheet {sheet_name}.")
 
-    print("time_row:", time_row)
-    print(data)
+        print("time_row:", time_row)
+        print(data)
 
-    # Collect values from column1, column2, column3, column4, and notes
-    values_to_concatenate = [
-        data[key].strip() for key in ["column2", "column1", "column3", "column4"]
-        if key in data and data[key] and data[key].strip() != "UNSELECTED"  # Exclude empty, None, or "UNSELECTED"
-    ]
-    print("values_to_concatenate:", values_to_concatenate)
+        # Collect values from column1, column2, column3, column4, and notes
+        values_to_concatenate = [
+            data[key].strip() for key in ["column2", "column1", "column3", "column4"]
+            if key in data and data[key] and data[key].strip() != "UNSELECTED"  # Exclude empty, None, or "UNSELECTED"
+        ]
+        print("values_to_concatenate:", values_to_concatenate)
 
-    # Join the remaining values into a single string with a newline delimiter
-    concatenated_values = "".join(values_to_concatenate)
+        # Join the remaining values into a single string with a newline delimiter
+        concatenated_values = "".join(values_to_concatenate)
 
-    # Add "Notes" on a new line if it exists
-    if "Notes" in data and data["Notes"] and data["Notes"].strip() != "UNSELECTED":
-        concatenated_values += "\n" + data["Notes"].strip()  # Add Notes on a new line
-    admin_values = concatenated_values
+        # Add "Notes" on a new line if it exists
+        if "Notes" in data and data["Notes"] and data["Notes"].strip() != "UNSELECTED":
+            concatenated_values += "\n" + data["Notes"].strip()  # Add Notes on a new line
+        # admin_values = concatenated_values
 
-    username = data.get("Username", "N/A")
-    # Concatenate the username with the other values
-    concatenated_values = "(" + username + ") " + concatenated_values
-    print("concatenated values: ", concatenated_values)
-    print("admin values: ", admin_values)
+        username = data.get("Username", "N/A")
+        # Concatenate the username with the other values
+        concatenated_values = "(" + username + ") " + concatenated_values
+        print("concatenated values: ", concatenated_values)
+        # print("admin values: ", admin_values)
 
-    # Write the concatenated values to the appropriate cell
-    sheet[f"{day_column}{time_row}"] = concatenated_values
-    admin_sheet[f"{day_column}{time_row}"] = admin_values
-    sheet = format_worksheet(sheet, year=today.year, month=today.month)
-    admin_sheet = format_worksheet(admin_sheet, year=today.year, month=today.month)
-    print("sheet: ", sheet)
-    print("admin sheet: ", admin_sheet)
+        # Write the concatenated values to the appropriate cell
+        sheet[f"{day_column}{time_row}"] = concatenated_values
+        # admin_sheet[f"{day_column}{time_row}"] = admin_values
+        sheet = format_worksheet(sheet, year=today.year, month=today.month)
+        # admin_sheet = format_worksheet(admin_sheet, year=today.year, month=today.month)
+        print("sheet: ", sheet)
+        # print("admin sheet: ", admin_sheet)
 
-    # Save the workbook
-    workbook.save(EXCEL_FILE)
-    admin_workbook.save(ADMIN_EXCEL_FILE)
-    print("done with excel")
+        # Save the workbook
+        workbook.save(EXCEL_FILE)
+        # admin_workbook.save(ADMIN_EXCEL_FILE)
+        print("done with excel")
 
-    return True
-    # except Exception as e:
-    #     print(f"Error updating {EXCEL_FILE}: {e}")
+        return True
+    except Exception as e:
+        print(f"Error updating {EXCEL_FILE}: {e}")
 
 def create_worksheet(sheet, student_name, current_month, today):
     # Add the student's name in the first row

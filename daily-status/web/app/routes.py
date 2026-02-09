@@ -113,7 +113,6 @@ def clear_session():
     session.pop('column4', None)
     session.pop('notes', None)
 
-
 @main.route('/submit', methods=['POST'])
 @login_required
 def submit():
@@ -126,6 +125,9 @@ def submit():
     column3 = request.form.get('column3')
     column4 = request.form.get('column4')
     notes = request.form.get('notes')
+
+    request_data = request.json
+    print(f"Request data: {request_data}")
 
     session['student'] = student
     session['time'] = time
